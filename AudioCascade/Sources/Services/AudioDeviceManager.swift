@@ -526,22 +526,21 @@ class AudioDeviceManager: ObservableObject {
     }
 
     private func ensureUniquePriorities(_ devices: [AudioDevice]) -> [AudioDevice] {
-        let updatedDevices = devices
         var usedPriorities = Set<Int>()
 
-        for (index, device) in updatedDevices.enumerated() {
+        for device in devices {
             if usedPriorities.contains(device.priority) {
                 // Find next available priority
                 var newPriority = 1
                 while usedPriorities.contains(newPriority) {
                     newPriority += 1
                 }
-                updatedDevices[index].priority = newPriority
+                device.priority = newPriority
             }
-            usedPriorities.insert(updatedDevices[index].priority)
+            usedPriorities.insert(device.priority)
         }
 
-        return updatedDevices.sorted { $0.priority < $1.priority }
+        return devices.sorted { $0.priority < $1.priority }
     }
 
     func updateCheckInterval(_ interval: Double) {

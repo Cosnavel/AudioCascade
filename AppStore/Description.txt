@@ -1,0 +1,47 @@
+AudioCascade - Smart Audio Device Manager
+
+Take control of your Mac's audio devices with AudioCascade, the intelligent audio device manager that automatically switches to your preferred devices based on priority.
+
+KEY FEATURES:
+
+🎧 Smart Device Switching
+• Automatically switch to your highest priority available device
+• Set custom priorities for all your audio devices
+• Never manually switch devices again
+
+🎯 Priority Management
+• Drag and drop to reorder device priorities
+• Remember all devices ever connected
+• Enable/disable devices without losing settings
+
+🎨 Beautiful Interface
+• Clean, modern menubar app design
+• Dark mode support
+• Intuitive drag-and-drop interface
+• Real-time device status updates
+
+🌍 Multi-Language Support
+• Available in English, German, and French
+• Automatic language detection
+
+⚡ Performance
+• Lightweight and efficient
+• Adjustable check intervals
+• Minimal system resource usage
+
+🔧 Advanced Features
+• Start at login option
+• Show/hide dock icon
+• Reset priorities with one click
+• Clear disconnected devices
+• Manual device switching via context menu
+
+Perfect for:
+• Musicians and audio professionals
+• Remote workers switching between headsets
+• Anyone with multiple audio devices
+• Streamers and content creators
+
+AudioCascade runs quietly in your menubar, automatically managing your audio devices so you can focus on what matters. No more fumbling through System Preferences when you plug in your headphones or connect to a conference call.
+
+Privacy: AudioCascade does not collect any personal data. All settings are stored locally on your Mac.

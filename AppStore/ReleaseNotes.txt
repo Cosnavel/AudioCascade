@@ -1,0 +1,16 @@
+Version 1.0.0 - Initial Release
+
+Welcome to AudioCascade!
+
+This first release includes:
+• Automatic audio device switching based on priority
+• Drag and drop priority management
+• Device memory - remembers all devices ever connected
+• Beautiful native macOS interface
+• Multi-language support (English, German, French)
+• Menubar app with optional dock icon
+• Adjustable check intervals
+• Manual device switching
+• Start at login option
+
+We're excited to help you manage your audio devices more efficiently. If you have any feedback or feature requests, please let us know!
