@@ -33,11 +33,11 @@ struct EmptyStateView: View {
                 .font(.system(size: 48))
                 .foregroundColor(.secondary)
 
-            Text("No \(deviceType.rawValue) Devices")
+            Text(deviceType == .input ? "empty_input_title".localized : "empty_output_title".localized)
                 .font(.headline)
                 .foregroundColor(.secondary)
 
-            Text("Connect an audio device to see it here")
+            Text("empty_subtitle".localized)
                 .font(.caption)
                 .foregroundColor(.secondary)
         }

@@ -42,7 +42,7 @@ struct DeviceRowView: View {
                         Image(systemName: "moon.zzz")
                             .font(.caption)
                             .foregroundColor(.orange)
-                            .help("Device is disconnected")
+                            .help("status_disconnected".localized)
                     }
                 }
 
@@ -96,14 +96,14 @@ struct DeviceRowView: View {
             isHovering = hovering
         }
         .contextMenu {
-            Button("Set as Default") {
+            Button("menu_set_default".localized) {
                 audioManager.setDevice(device, for: deviceType)
             }
             .disabled(!device.isEnabled || !device.isCurrentlyConnected)
 
             Divider()
 
-            Button(device.isEnabled ? "Disable Device" : "Enable Device") {
+            Button(device.isEnabled ? "menu_disable".localized : "menu_enable".localized) {
                 audioManager.toggleDeviceEnabled(device)
             }
         }
@@ -135,13 +135,13 @@ struct DeviceRowView: View {
 
     private var statusText: String {
         if !device.isEnabled {
-            return "Disabled"
+            return "status_disabled".localized
         } else if !device.isCurrentlyConnected {
-            return "Not connected • Last seen \(formattedDate)"
+            return "status_not_connected".localized(with: formattedDate)
         } else if isCurrentDevice {
-            return "Currently active"
+            return "status_active".localized
         } else {
-            return "Ready"
+            return "status_ready".localized
         }
     }
 

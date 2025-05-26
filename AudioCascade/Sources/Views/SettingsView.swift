@@ -7,8 +7,8 @@ struct SettingsView: View {
     @AppStorage("showInDock") private var showInDock = false
     @AppStorage("checkInterval") private var checkInterval = 1.0
     @Environment(\.dismiss) private var dismiss
-    @State private var showResetAlert = false
-    @State private var showClearAlert = false
+    @State private var showResetConfirmation = false
+    @State private var showClearConfirmation = false
 
     var body: some View {
         VStack(spacing: 0) {
@@ -18,7 +18,7 @@ struct SettingsView: View {
                     .font(.title2)
                     .foregroundStyle(.blue)
 
-                Text("Settings")
+                Text("settings_title".localized)
                     .font(.headline)
 
                 Spacer()
@@ -34,8 +34,8 @@ struct SettingsView: View {
 
             // Settings Content
             Form {
-                Section("General") {
-                    Toggle("Start at Login", isOn: $autoStartAtLogin)
+                Section("settings_general".localized) {
+                    Toggle("settings_start_login".localized, isOn: $autoStartAtLogin)
                         .onChange(of: autoStartAtLogin) { newValue in
                             if newValue {
                                 try? SMAppService.mainApp.register()
@@ -44,15 +44,15 @@ struct SettingsView: View {
                             }
                         }
 
-                    Toggle("Show in Dock", isOn: $showInDock)
+                    Toggle("settings_show_dock".localized, isOn: $showInDock)
                         .onChange(of: showInDock) { newValue in
                             NSApp.setActivationPolicy(newValue ? .regular : .accessory)
                         }
                 }
 
-                Section("Audio Management") {
+                Section("settings_audio".localized) {
                     HStack {
-                        Text("Check Interval")
+                        Text("settings_check_interval".localized)
                         Slider(value: $checkInterval, in: 0.5...5.0, step: 0.5)
                             .onChange(of: checkInterval) { newValue in
                                 audioManager.updateCheckInterval(newValue)
@@ -62,43 +62,91 @@ struct SettingsView: View {
                             .frame(width: 40)
                     }
 
-                    Button("Reset All Priorities") {
-                        showResetAlert = true
-                    }
-                    .foregroundColor(.red)
-                    .alert("Reset Priorities?", isPresented: $showResetAlert) {
-                        Button("Cancel", role: .cancel) { }
-                        Button("Reset", role: .destructive) {
-                            audioManager.resetAllPriorities()
+                    // Reset Priorities with inline confirmation
+                    if showResetConfirmation {
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("alert_reset_message".localized)
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+
+                            HStack {
+                                Button("alert_cancel".localized) {
+                                    withAnimation(.easeInOut(duration: 0.2)) {
+                                        showResetConfirmation = false
+                                    }
+                                }
+                                .buttonStyle(.bordered)
+
+                                Button("alert_reset".localized) {
+                                    audioManager.resetAllPriorities()
+                                    withAnimation(.easeInOut(duration: 0.2)) {
+                                        showResetConfirmation = false
+                                    }
+                                }
+                                .buttonStyle(.borderedProminent)
+                                .foregroundColor(.white)
+                                .tint(.red)
+                            }
                         }
-                    } message: {
-                        Text("This will reset all device priorities to their default order.")
+                        .padding(.vertical, 4)
+                    } else {
+                        Button("settings_reset_priorities".localized) {
+                            withAnimation(.easeInOut(duration: 0.2)) {
+                                showResetConfirmation = true
+                                showClearConfirmation = false
+                            }
+                        }
+                        .foregroundColor(.red)
                     }
 
-                    Button("Clear Disconnected Devices") {
-                        showClearAlert = true
-                    }
-                    .alert("Clear Disconnected Devices?", isPresented: $showClearAlert) {
-                        Button("Cancel", role: .cancel) { }
-                        Button("Clear", role: .destructive) {
-                            audioManager.clearDisconnectedDevices()
+                    // Clear Disconnected with inline confirmation
+                    if showClearConfirmation {
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("alert_clear_message".localized)
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+
+                            HStack {
+                                Button("alert_cancel".localized) {
+                                    withAnimation(.easeInOut(duration: 0.2)) {
+                                        showClearConfirmation = false
+                                    }
+                                }
+                                .buttonStyle(.bordered)
+
+                                Button("alert_clear".localized) {
+                                    audioManager.clearDisconnectedDevices()
+                                    withAnimation(.easeInOut(duration: 0.2)) {
+                                        showClearConfirmation = false
+                                    }
+                                }
+                                .buttonStyle(.borderedProminent)
+                                .foregroundColor(.white)
+                                .tint(.orange)
+                            }
                         }
-                    } message: {
-                        Text("This will remove all disconnected devices from your saved list.")
+                        .padding(.vertical, 4)
+                    } else {
+                        Button("settings_clear_disconnected".localized) {
+                            withAnimation(.easeInOut(duration: 0.2)) {
+                                showClearConfirmation = true
+                                showResetConfirmation = false
+                            }
+                        }
                     }
                 }
 
-                Section("About") {
+                Section("settings_about".localized) {
                     HStack {
-                        Text("Version")
+                        Text("settings_version".localized)
                         Spacer()
                         Text("1.0.0")
                             .foregroundColor(.secondary)
                     }
 
-                    Link("GitHub Repository", destination: URL(string: "https://github.com/Cosnavel/AudioCascade")!)
+                    Link("settings_github".localized, destination: URL(string: "https://github.com/Cosnavel/AudioCascade")!)
 
-                    Link("Report an Issue", destination: URL(string: "https://github.com/Cosnavel/AudioCascade/issues")!)
+                    Link("settings_report_issue".localized, destination: URL(string: "https://github.com/Cosnavel/AudioCascade/issues")!)
                 }
             }
             .formStyle(.grouped)

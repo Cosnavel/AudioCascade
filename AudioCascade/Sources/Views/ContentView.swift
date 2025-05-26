@@ -14,7 +14,7 @@ struct ContentView: View {
             // Tab Selection
             Picker("Device Type", selection: $selectedTab) {
                 ForEach(AudioDeviceType.allCases, id: \.self) { type in
-                    Label(type.rawValue, systemImage: type.systemSymbol)
+                    Label(type == .input ? "tab_input".localized : "tab_output".localized, systemImage: type.systemSymbol)
                         .tag(type)
                 }
             }
@@ -25,7 +25,7 @@ struct ContentView: View {
             HStack {
                 Image(systemName: "magnifyingglass")
                     .foregroundColor(.secondary)
-                TextField("Search devices...", text: $searchText)
+                TextField("search_placeholder".localized, text: $searchText)
                     .textFieldStyle(.plain)
                 if !searchText.isEmpty {
                     Button(action: { searchText = "" }) {
