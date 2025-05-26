@@ -34,7 +34,9 @@ class AudioDeviceManager: ObservableObject {
 
     private func startMonitoring() {
         DispatchQueue.main.async { [weak self] in
-            self?.timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
+            let interval = UserDefaults.standard.double(forKey: "checkInterval")
+            let actualInterval = interval > 0 ? interval : 1.0
+            self?.timer = Timer.scheduledTimer(withTimeInterval: actualInterval, repeats: true) { [weak self] _ in
                 self?.checkAndApplyPriorities()
             }
         }
@@ -536,6 +538,15 @@ class AudioDeviceManager: ObservableObject {
         }
 
         return updatedDevices.sorted { $0.priority < $1.priority }
+    }
+
+    func updateCheckInterval(_ interval: Double) {
+        timer?.invalidate()
+        DispatchQueue.main.async { [weak self] in
+            self?.timer = Timer.scheduledTimer(withTimeInterval: interval, repeats: true) { [weak self] _ in
+                self?.checkAndApplyPriorities()
+            }
+        }
     }
 }
 

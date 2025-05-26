@@ -1,4 +1,5 @@
 import SwiftUI
+import ServiceManagement
 
 struct SettingsView: View {
     @EnvironmentObject var audioManager: AudioDeviceManager
@@ -6,6 +7,8 @@ struct SettingsView: View {
     @AppStorage("showInDock") private var showInDock = false
     @AppStorage("checkInterval") private var checkInterval = 1.0
     @Environment(\.dismiss) private var dismiss
+    @State private var showResetAlert = false
+    @State private var showClearAlert = false
 
     var body: some View {
         VStack(spacing: 0) {
@@ -34,7 +37,11 @@ struct SettingsView: View {
                 Section("General") {
                     Toggle("Start at Login", isOn: $autoStartAtLogin)
                         .onChange(of: autoStartAtLogin) { newValue in
-                            // TODO: Implement login item
+                            if newValue {
+                                try? SMAppService.mainApp.register()
+                            } else {
+                                try? SMAppService.mainApp.unregister()
+                            }
                         }
 
                     Toggle("Show in Dock", isOn: $showInDock)
@@ -47,18 +54,37 @@ struct SettingsView: View {
                     HStack {
                         Text("Check Interval")
                         Slider(value: $checkInterval, in: 0.5...5.0, step: 0.5)
+                            .onChange(of: checkInterval) { newValue in
+                                audioManager.updateCheckInterval(newValue)
+                            }
                         Text("\(checkInterval, specifier: "%.1f")s")
                             .monospacedDigit()
                             .frame(width: 40)
                     }
 
                     Button("Reset All Priorities") {
-                        audioManager.resetAllPriorities()
+                        showResetAlert = true
                     }
                     .foregroundColor(.red)
+                    .alert("Reset Priorities?", isPresented: $showResetAlert) {
+                        Button("Cancel", role: .cancel) { }
+                        Button("Reset", role: .destructive) {
+                            audioManager.resetAllPriorities()
+                        }
+                    } message: {
+                        Text("This will reset all device priorities to their default order.")
+                    }
 
                     Button("Clear Disconnected Devices") {
-                        audioManager.clearDisconnectedDevices()
+                        showClearAlert = true
+                    }
+                    .alert("Clear Disconnected Devices?", isPresented: $showClearAlert) {
+                        Button("Cancel", role: .cancel) { }
+                        Button("Clear", role: .destructive) {
+                            audioManager.clearDisconnectedDevices()
+                        }
+                    } message: {
+                        Text("This will remove all disconnected devices from your saved list.")
                     }
                 }
 
@@ -70,9 +96,9 @@ struct SettingsView: View {
                             .foregroundColor(.secondary)
                     }
 
-                    Link("GitHub Repository", destination: URL(string: "https://github.com/yourusername/AudioCascade")!)
+                    Link("GitHub Repository", destination: URL(string: "https://github.com/Cosnavel/AudioCascade")!)
 
-                    Link("Report an Issue", destination: URL(string: "https://github.com/yourusername/AudioCascade/issues")!)
+                    Link("Report an Issue", destination: URL(string: "https://github.com/Cosnavel/AudioCascade/issues")!)
                 }
             }
             .formStyle(.grouped)

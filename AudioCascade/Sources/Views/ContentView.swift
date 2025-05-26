@@ -91,9 +91,9 @@ struct HeaderView: View {
                 .foregroundStyle(.blue)
 
             VStack(alignment: .leading, spacing: 2) {
-                Text("AudioCascade")
+                Text("app_name".localized)
                     .font(.headline)
-                Text("Smart Audio Device Manager")
+                Text("app_tagline".localized)
                     .font(.caption)
                     .foregroundColor(.secondary)
             }
