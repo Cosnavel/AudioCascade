@@ -1,0 +1,57 @@
+/*
+  Localizable.strings - German
+  AudioCascade
+*/
+
+// App Name
+"app_name" = "AudioCascade";
+"app_tagline" = "Intelligente Audio-Geräteverwaltung";
+
+// Tabs
+"tab_input" = "Eingabe";
+"tab_output" = "Ausgabe";
+
+// Search
+"search_placeholder" = "Geräte suchen...";
+
+// Device Status
+"status_disabled" = "Deaktiviert";
+"status_not_connected" = "Nicht verbunden • Zuletzt gesehen %@";
+"status_active" = "Aktuell aktiv";
+"status_ready" = "Bereit";
+"status_disconnected" = "Gerät ist getrennt";
+
+// Empty State
+"empty_input_title" = "Keine Eingabegeräte";
+"empty_output_title" = "Keine Ausgabegeräte";
+"empty_subtitle" = "Verbinde ein Audiogerät, um es hier zu sehen";
+
+// Context Menu
+"menu_set_default" = "Als Standard festlegen";
+"menu_disable" = "Gerät deaktivieren";
+"menu_enable" = "Gerät aktivieren";
+
+// Settings
+"settings_title" = "Einstellungen";
+"settings_general" = "Allgemein";
+"settings_audio" = "Audio-Verwaltung";
+"settings_about" = "Über";
+
+// Settings Options
+"settings_start_login" = "Bei Anmeldung starten";
+"settings_show_dock" = "Im Dock anzeigen";
+"settings_check_interval" = "Prüfintervall";
+"settings_reset_priorities" = "Alle Prioritäten zurücksetzen";
+"settings_clear_disconnected" = "Getrennte Geräte entfernen";
+"settings_version" = "Version";
+"settings_github" = "GitHub Repository";
+"settings_report_issue" = "Problem melden";
+
+// Alerts
+"alert_reset_title" = "Prioritäten zurücksetzen?";
+"alert_reset_message" = "Dies setzt alle Geräteprioritäten auf ihre Standardreihenfolge zurück.";
+"alert_clear_title" = "Getrennte Geräte entfernen?";
+"alert_clear_message" = "Dies entfernt alle getrennten Geräte aus deiner gespeicherten Liste.";
+"alert_cancel" = "Abbrechen";
+"alert_reset" = "Zurücksetzen";
+"alert_clear" = "Entfernen";
