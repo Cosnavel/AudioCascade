@@ -1,0 +1,57 @@
+/*
+  Localizable.strings - French
+  AudioCascade
+*/
+
+// App Name
+"app_name" = "AudioCascade";
+"app_tagline" = "Gestionnaire Audio Intelligent";
+
+// Tabs
+"tab_input" = "Entrée";
+"tab_output" = "Sortie";
+
+// Search
+"search_placeholder" = "Rechercher des appareils...";
+
+// Device Status
+"status_disabled" = "Désactivé";
+"status_not_connected" = "Non connecté • Vu pour la dernière fois %@";
+"status_active" = "Actuellement actif";
+"status_ready" = "Prêt";
+"status_disconnected" = "L'appareil est déconnecté";
+
+// Empty State
+"empty_input_title" = "Aucun Périphérique d'Entrée";
+"empty_output_title" = "Aucun Périphérique de Sortie";
+"empty_subtitle" = "Connectez un périphérique audio pour le voir ici";
+
+// Context Menu
+"menu_set_default" = "Définir par Défaut";
+"menu_disable" = "Désactiver l'Appareil";
+"menu_enable" = "Activer l'Appareil";
+
+// Settings
+"settings_title" = "Paramètres";
+"settings_general" = "Général";
+"settings_audio" = "Gestion Audio";
+"settings_about" = "À propos";
+
+// Settings Options
+"settings_start_login" = "Lancer au Démarrage";
+"settings_show_dock" = "Afficher dans le Dock";
+"settings_check_interval" = "Intervalle de Vérification";
+"settings_reset_priorities" = "Réinitialiser Toutes les Priorités";
+"settings_clear_disconnected" = "Effacer les Appareils Déconnectés";
+"settings_version" = "Version";
+"settings_github" = "Dépôt GitHub";
+"settings_report_issue" = "Signaler un Problème";
+
+// Alerts
+"alert_reset_title" = "Réinitialiser les Priorités?";
+"alert_reset_message" = "Cela réinitialisera toutes les priorités des appareils à leur ordre par défaut.";
+"alert_clear_title" = "Effacer les Appareils Déconnectés?";
+"alert_clear_message" = "Cela supprimera tous les appareils déconnectés de votre liste enregistrée.";
+"alert_cancel" = "Annuler";
+"alert_reset" = "Réinitialiser";
+"alert_clear" = "Effacer";
