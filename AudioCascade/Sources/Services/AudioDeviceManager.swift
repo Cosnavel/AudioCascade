@@ -171,37 +171,39 @@ class AudioDeviceManager: ObservableObject {
             mElement: kAudioObjectPropertyElementMain
         )
 
-        var deviceName: CFString = "" as CFString
-        var dataSize = UInt32(MemoryLayout<CFString>.size)
+        var deviceName: CFString?
+        var dataSize = UInt32(MemoryLayout<CFString?>.size)
 
-        let status = AudioObjectGetPropertyData(
-            deviceID,
-            &propertyAddress,
-            0,
-            nil,
-            &dataSize,
-            &deviceName
-        )
+        let status = withUnsafeMutablePointer(to: &deviceName) { ptr in
+            AudioObjectGetPropertyData(
+                deviceID,
+                &propertyAddress,
+                0,
+                nil,
+                &dataSize,
+                ptr
+            )
+        }
 
-        guard status == noErr else { return nil }
-
-        let name = deviceName as String
+        guard status == noErr, let name = deviceName as String? else { return nil }
 
         // Get device UID
         propertyAddress.mSelector = kAudioDevicePropertyDeviceUID
-        var deviceUID: CFString = "" as CFString
-        dataSize = UInt32(MemoryLayout<CFString>.size)
+        var deviceUID: CFString?
+        dataSize = UInt32(MemoryLayout<CFString?>.size)
 
-        AudioObjectGetPropertyData(
-            deviceID,
-            &propertyAddress,
-            0,
-            nil,
-            &dataSize,
-            &deviceUID
-        )
+        _ = withUnsafeMutablePointer(to: &deviceUID) { ptr in
+            AudioObjectGetPropertyData(
+                deviceID,
+                &propertyAddress,
+                0,
+                nil,
+                &dataSize,
+                ptr
+            )
+        }
 
-        let uid = deviceUID as String
+        let uid = (deviceUID as String?) ?? ""
 
         // Check if device has input/output
         let hasInput = hasStreams(deviceID: deviceID, scope: kAudioDevicePropertyScopeInput)
@@ -262,21 +264,21 @@ class AudioDeviceManager: ObservableObject {
             mElement: kAudioObjectPropertyElementMain
         )
 
-        var deviceUID: CFString = "" as CFString
-        var uidDataSize = UInt32(MemoryLayout<CFString>.size)
+        var deviceUID: CFString?
+        var uidDataSize = UInt32(MemoryLayout<CFString?>.size)
 
-        let uidStatus = AudioObjectGetPropertyData(
-            deviceID,
-            &uidPropertyAddress,
-            0,
-            nil,
-            &uidDataSize,
-            &deviceUID
-        )
+        let uidStatus = withUnsafeMutablePointer(to: &deviceUID) { ptr in
+            AudioObjectGetPropertyData(
+                deviceID,
+                &uidPropertyAddress,
+                0,
+                nil,
+                &uidDataSize,
+                ptr
+            )
+        }
 
-        guard uidStatus == noErr else { return nil }
-
-        let uid = deviceUID as String
+        guard uidStatus == noErr, let uid = deviceUID as String? else { return nil }
 
         // Find the device in our saved list
         if type == .input {
@@ -354,19 +356,21 @@ class AudioDeviceManager: ObservableObject {
                 mElement: kAudioObjectPropertyElementMain
             )
 
-            var deviceUID: CFString = "" as CFString
-            var uidDataSize = UInt32(MemoryLayout<CFString>.size)
+            var deviceUID: CFString?
+            var uidDataSize = UInt32(MemoryLayout<CFString?>.size)
 
-            let status = AudioObjectGetPropertyData(
-                deviceID,
-                &uidPropertyAddress,
-                0,
-                nil,
-                &uidDataSize,
-                &deviceUID
-            )
+            let status = withUnsafeMutablePointer(to: &deviceUID) { ptr in
+                AudioObjectGetPropertyData(
+                    deviceID,
+                    &uidPropertyAddress,
+                    0,
+                    nil,
+                    &uidDataSize,
+                    ptr
+                )
+            }
 
-            if status == noErr && (deviceUID as String) == uid {
+            if status == noErr, let currentUID = deviceUID as String?, currentUID == uid {
                 return deviceID
             }
         }
@@ -522,7 +526,7 @@ class AudioDeviceManager: ObservableObject {
     }
 
     private func ensureUniquePriorities(_ devices: [AudioDevice]) -> [AudioDevice] {
-        var updatedDevices = devices
+        let updatedDevices = devices
         var usedPriorities = Set<Int>()
 
         for (index, device) in updatedDevices.enumerated() {
