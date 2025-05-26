@@ -1,111 +1,174 @@
 # AudioCascade 🎧
 
-A beautiful macOS menubar app for intelligent audio device management with priority-based switching.
+<p align="center">
+  <img src="https://img.shields.io/badge/macOS-13.0+-blue.svg" alt="macOS 13.0+">
+  <img src="https://img.shields.io/badge/Swift-5.9-orange.svg" alt="Swift 5.9">
+  <img src="https://img.shields.io/badge/License-MIT-green.svg" alt="MIT License">
+  <img src="https://img.shields.io/badge/Version-1.0.0-purple.svg" alt="Version 1.0.0">
+</p>
 
-![AudioCascade](https://img.shields.io/badge/macOS-13.0+-blue.svg)
-![Swift](https://img.shields.io/badge/Swift-5.9-orange.svg)
-![License](https://img.shields.io/badge/License-MIT-green.svg)
+<p align="center">
+  <b>The Smart Audio Device Manager for macOS</b><br>
+  Never manually switch audio devices again.
+</p>
 
-## Features ✨
+<p align="center">
+  <img src="assets/hero-screenshot.png" alt="AudioCascade Hero" width="600">
+</p>
 
-- 🎯 **Priority-based device switching** - Set your preferred device order
-- 💾 **Device memory** - Remembers all devices even when disconnected
-- 🚫 **Device blocking** - Disable devices you never want to use
-- 🔄 **Automatic switching** - Switches to highest priority available device
-- 🎨 **Beautiful native UI** - Modern macOS design with SwiftUI
-- 🔍 **Device search** - Quickly find devices in long lists
-- ⚡ **Real-time monitoring** - Instant detection of device changes
+## 🚀 The Problem It Solves
 
-## How It Works 🛠️
+Ever plugged in your AirPods and macOS decided to use your webcam microphone instead? Or disconnected your monitor and suddenly you're broadcasting to the void?
 
-1. **Set Priorities**: Drag devices to reorder them by priority (1 = highest)
-2. **Enable/Disable**: Toggle devices on/off to control which can be used
-3. **Auto-Switch**: AudioCascade automatically selects the highest priority enabled device
-4. **Remember Devices**: All devices are remembered even when disconnected
+**AudioCascade fixes this madness.**
 
-## Example Setup 📋
+## ✨ Features That Actually Matter
 
-**Input Priority:**
-1. 🎙️ Elgato Wave:3 (when available)
-2. 🎧 AirPods Max (backup)
-3. 💻 MacBook Pro Microphone (fallback)
-4. ❌ Logitech Camera (disabled - never use)
+### 🎯 **Priority-Based Switching**
+Set your device priorities once. AudioCascade handles the rest.
+- Drag & drop to reorder
+- Automatic switching to the best available device
+- Works for both input and output devices
 
-**Output Priority:**
-1. 🔊 Studio Monitors (when available)
-2. 🎧 AirPods Max (when mobile)
-3. 💻 MacBook Pro Speakers (fallback)
+### 💾 **Device Memory**
+AudioCascade remembers every device you've ever connected.
+- See disconnected devices grayed out
+- Know when you last used each device
+- Never lose your settings
 
-## Installation 📦
+### 🚫 **Device Blocking**
+Some devices should never be used.
+- Disable that terrible webcam mic forever
+- Toggle devices on/off with a switch
+- Blocked devices are completely ignored
 
-### From Source
+### ⚡ **Real-Time Monitoring**
+Instant detection and switching.
+- Connects in < 1 second
+- No manual intervention needed
+- Background monitoring with adjustable intervals
 
-1. Clone the repository:
+### 🌍 **Multi-Language Support**
+Available in:
+- 🇬🇧 English
+- 🇩🇪 Deutsch
+- 🇫🇷 Français
+
+## 📸 Screenshots
+
+<table>
+  <tr>
+    <td><img src="assets/main-interface.png" alt="Main Interface" width="300"></td>
+    <td><img src="assets/priority-drag.png" alt="Priority Management" width="300"></td>
+  </tr>
+  <tr>
+    <td><img src="assets/settings.png" alt="Settings" width="300"></td>
+    <td><img src="assets/dark-mode.png" alt="Dark Mode" width="300"></td>
+  </tr>
+</table>
+
+## 🎮 How It Works
+
+1. **Install & Launch** - AudioCascade lives in your menubar
+2. **Set Priorities** - Drag devices to set your preferred order
+3. **Forget About It** - AudioCascade automatically switches to the best available device
+
+### Example Setup
+
+**🎤 Input Priority:**
+1. Elgato Wave:3 (Professional Mic)
+2. AirPods Max (When mobile)
+3. MacBook Pro Microphone (Fallback)
+4. ❌ Logitech Webcam (Disabled - Never use!)
+
+**🔊 Output Priority:**
+1. Studio Monitors (Desktop setup)
+2. AirPods Max (Wireless)
+3. MacBook Pro Speakers (Built-in)
+
+## 📦 Installation
+
+### Option 1: Download Release (Recommended)
+1. Download the latest `.dmg` from [Releases](https://github.com/Cosnavel/AudioCascade/releases)
+2. Drag AudioCascade to your Applications folder
+3. Launch and enjoy!
+
+### Option 2: Build from Source
 ```bash
-git clone https://github.com/yourusername/AudioCascade.git
+# Clone the repository
+git clone https://github.com/Cosnavel/AudioCascade.git
 cd AudioCascade
-```
 
-2. Open in Xcode:
-```bash
+# Open in Xcode
 open Package.swift
+
+# Build and run (⌘+R)
 ```
 
-3. Build and run (⌘+R)
+### Option 3: Using Swift CLI
+```bash
+# Clone and build
+git clone https://github.com/Cosnavel/AudioCascade.git
+cd AudioCascade
+swift build -c release
 
-### Direct Download
+# Run
+.build/release/AudioCascade
+```
 
-Coming soon: Download the latest `.dmg` from the [Releases](https://github.com/yourusername/AudioCascade/releases) page.
+## 🛠️ Configuration
 
-## Usage 🚀
+### Settings
+- **Start at Login** - Launch AudioCascade automatically
+- **Show in Dock** - Toggle dock icon visibility
+- **Check Interval** - Adjust device polling frequency (0.5s - 5.0s)
 
-1. Click the menubar icon to open AudioCascade
-2. Switch between Input/Output tabs
-3. Drag devices to reorder priorities
-4. Toggle devices on/off with the switch
-5. Right-click for more options
+### Keyboard Shortcuts
+- `⌘+,` - Open Settings
+- `⌘+Q` - Quit AudioCascade
 
-## Requirements 📱
+## 🏗️ Technical Details
 
-- macOS 13.0 or later
+### Built With
+- **SwiftUI** - Native macOS interface
+- **CoreAudio** - Low-level audio device management
+- **Combine** - Reactive state management
+
+### Requirements
+- macOS 13.0 (Ventura) or later
 - Apple Silicon or Intel Mac
 
-## Development 👨‍💻
+### Permissions
+AudioCascade requires no special permissions! It uses public CoreAudio APIs.
 
-### Architecture
+## 🤝 Contributing
 
-- **SwiftUI** for the user interface
-- **CoreAudio** for device management
-- **Combine** for reactive updates
-- **UserDefaults** for persistence
+Found a bug? Have a feature request? Contributions are welcome!
 
-### Building
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-```bash
-swift build
-swift run
-```
-
-### Testing
-
-```bash
-swift test
-```
-
-## Contributing 🤝
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-## License 📄
+## 📝 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## Acknowledgments 🙏
+## 🙏 Acknowledgments
 
-- Inspired by the frustration of macOS audio device switching
-- Built with love for the macOS community
-- Thanks to the [blog post](https://www.bbss.dev/posts/macos-default-input/) that sparked this idea
+- Inspired by the frustration of macOS audio device management
+- Thanks to the [blog post](https://www.bbss.dev/posts/macos-default-input/) that sparked this project
+- Built with ❤️ for the macOS community
+
+## 📬 Support
+
+- 🐛 [Report Issues](https://github.com/Cosnavel/AudioCascade/issues)
+- 💬 [Discussions](https://github.com/Cosnavel/AudioCascade/discussions)
+- ⭐ Star this repo if you find it useful!
 
 ---
 
-Made with ❤️ by [Your Name]
+<p align="center">
+  Made with ❤️ by <a href="https://github.com/Cosnavel">Cosnavel</a>
+</p>
