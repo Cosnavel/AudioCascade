@@ -1,14 +1,12 @@
 import SwiftUI
 import AppKit
-import Sparkle
 
 @main
 struct AudioCascadeApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
 
     init() {
-        // Initialize Sparkle updater
-        _ = SPUStandardUpdaterController(startingUpdater: true, updaterDelegate: nil, userDriverDelegate: nil)
+        // Sparkle will be initialized in AppDelegate when we have a proper bundle
     }
 
     var body: some Scene {
@@ -27,6 +25,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationDidFinishLaunching(_ notification: Notification) {
         // Initialize audio manager once
         audioManager = AudioDeviceManager()
+
+        // Check for accessibility permissions for global hotkeys
+        checkAccessibilityPermissions()
 
         // Create the status item
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
@@ -58,15 +59,30 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         // Hide from dock if preference is set
         updateDockVisibility()
+
+        // Initialize Sparkle if we have a proper bundle
+        #if !DEBUG
+        if Bundle.main.bundleIdentifier != nil {
+            // Sparkle initialization would go here for release builds
+        }
+        #endif
+    }
+
+    func checkAccessibilityPermissions() {
+        let options = [kAXTrustedCheckOptionPrompt.takeUnretainedValue() as String: false]
+        let accessEnabled = AXIsProcessTrustedWithOptions(options as CFDictionary)
+
+        if !accessEnabled {
+            // Store that we need to show the permission prompt
+            UserDefaults.standard.set(true, forKey: "needsAccessibilityPermission")
+        }
     }
 
     @objc func togglePopover(_ sender: AnyObject?) {
-        if let button = statusItem.button {
-            if popover.isShown {
-                closePopover(sender: sender)
-            } else {
-                showPopover(sender: sender)
-            }
+        if popover.isShown {
+            closePopover(sender: sender)
+        } else {
+            showPopover(sender: sender)
         }
     }
 

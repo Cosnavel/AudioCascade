@@ -1,234 +1,288 @@
 import Foundation
 
 struct Localization {
-    static let shared = Localization()
-
-    private let translations: [String: [String: String]] = [
-        "en": [
-            // App Name
-            "app_name": "AudioCascade",
-            "app_tagline": "Smart Audio Device Manager",
-
-            // Tabs
-            "tab_input": "Input",
-            "tab_output": "Output",
-
-            // Search
-            "search_placeholder": "Search devices...",
-
-            // Device Status
-            "status_disabled": "Disabled",
-            "status_not_connected": "Not connected • Last seen %@",
-            "status_active": "Currently active",
-            "status_ready": "Ready",
-            "status_disconnected": "Device is disconnected",
-
-            // Empty State
-            "empty_input_title": "No Input Devices",
-            "empty_output_title": "No Output Devices",
-            "empty_subtitle": "Connect an audio device to see it here",
-
-            // Context Menu
-            "menu_set_default": "Set as Default",
-            "menu_disable": "Disable Device",
-            "menu_enable": "Enable Device",
-            "menu_edit_shortcut": "Edit Shortcut",
-            "menu_clear_shortcut": "Clear Shortcut",
-
-            // Settings
-            "settings_title": "Settings",
-            "settings_general": "General",
-            "settings_audio": "Audio Management",
-            "settings_about": "About",
-
-            // Settings Options
-            "settings_start_login": "Start at Login",
-            "settings_show_dock": "Show in Dock",
-            "settings_check_interval": "Check Interval",
-            "settings_reset_priorities": "Reset All Priorities",
-            "settings_clear_disconnected": "Clear Disconnected Devices",
-            "settings_version": "Version",
-            "settings_github": "GitHub Repository",
-            "settings_report_issue": "Report an Issue",
-
-            // Alerts
-            "alert_reset_title": "Reset Priorities?",
-            "alert_reset_message": "This will reset all device priorities to their default order.",
-            "alert_clear_title": "Clear Disconnected Devices?",
-            "alert_clear_message": "This will remove all disconnected devices from your saved list.",
-            "alert_cancel": "Cancel",
-            "alert_reset": "Reset",
-            "alert_clear": "Clear",
-
-            // Shortcut related
-            "shortcut_title": "Set Keyboard Shortcut",
-            "shortcut_recording": "Recording...",
-            "shortcut_none": "Click to set",
-            "shortcut_clear": "Clear shortcut",
-            "shortcut_edit": "Edit keyboard shortcut",
-            "shortcut_help": "Press any key combination with modifiers\n(⌘, ⇧, ⌥, ⌃)",
-            "done": "Done"
+    static let strings: [String: [String: String]] = [
+        // App
+        "app_name": [
+            "en": "AudioCascade",
+            "de": "AudioCascade",
+            "fr": "AudioCascade"
         ],
-        "de": [
-            // App Name
-            "app_name": "AudioCascade",
-            "app_tagline": "Intelligente Audio-Geräteverwaltung",
-
-            // Tabs
-            "tab_input": "Eingabe",
-            "tab_output": "Ausgabe",
-
-            // Search
-            "search_placeholder": "Geräte suchen...",
-
-            // Device Status
-            "status_disabled": "Deaktiviert",
-            "status_not_connected": "Nicht verbunden • Zuletzt gesehen %@",
-            "status_active": "Aktuell aktiv",
-            "status_ready": "Bereit",
-            "status_disconnected": "Gerät ist getrennt",
-
-            // Empty State
-            "empty_input_title": "Keine Eingabegeräte",
-            "empty_output_title": "Keine Ausgabegeräte",
-            "empty_subtitle": "Verbinde ein Audiogerät, um es hier zu sehen",
-
-            // Context Menu
-            "menu_set_default": "Als Standard festlegen",
-            "menu_disable": "Gerät deaktivieren",
-            "menu_enable": "Gerät aktivieren",
-            "menu_edit_shortcut": "Tastenkürzel bearbeiten",
-            "menu_clear_shortcut": "Tastenkürzel entfernen",
-
-            // Settings
-            "settings_title": "Einstellungen",
-            "settings_general": "Allgemein",
-            "settings_audio": "Audio-Verwaltung",
-            "settings_about": "Über",
-
-            // Settings Options
-            "settings_start_login": "Bei Anmeldung starten",
-            "settings_show_dock": "Im Dock anzeigen",
-            "settings_check_interval": "Prüfintervall",
-            "settings_reset_priorities": "Alle Prioritäten zurücksetzen",
-            "settings_clear_disconnected": "Getrennte Geräte entfernen",
-            "settings_version": "Version",
-            "settings_github": "GitHub Repository",
-            "settings_report_issue": "Problem melden",
-
-            // Alerts
-            "alert_reset_title": "Prioritäten zurücksetzen?",
-            "alert_reset_message": "Dies setzt alle Geräteprioritäten auf ihre Standardreihenfolge zurück.",
-            "alert_clear_title": "Getrennte Geräte entfernen?",
-            "alert_clear_message": "Dies entfernt alle getrennten Geräte aus deiner gespeicherten Liste.",
-            "alert_cancel": "Abbrechen",
-            "alert_reset": "Zurücksetzen",
-            "alert_clear": "Entfernen",
-
-            // Shortcut related
-            "shortcut_title": "Tastenkürzel festlegen",
-            "shortcut_recording": "Aufnahme...",
-            "shortcut_none": "Klicken zum Setzen",
-            "shortcut_clear": "Tastenkürzel löschen",
-            "shortcut_edit": "Tastenkürzel bearbeiten",
-            "shortcut_help": "Drücken Sie eine Tastenkombination mit Modifikatoren\n(⌘, ⇧, ⌥, ⌃)",
-            "done": "Fertig"
+        "app_tagline": [
+            "en": "Smart Audio Device Management",
+            "de": "Intelligente Audiogeräteverwaltung",
+            "fr": "Gestion intelligente des périphériques audio"
         ],
-        "fr": [
-            // App Name
-            "app_name": "AudioCascade",
-            "app_tagline": "Gestionnaire Audio Intelligent",
 
-            // Tabs
-            "tab_input": "Entrée",
-            "tab_output": "Sortie",
+        // Tabs
+        "tab_input": [
+            "en": "Input",
+            "de": "Eingabe",
+            "fr": "Entrée"
+        ],
+        "tab_output": [
+            "en": "Output",
+            "de": "Ausgabe",
+            "fr": "Sortie"
+        ],
 
-            // Search
-            "search_placeholder": "Rechercher des appareils...",
+        // Device Status
+        "status_active": [
+            "en": "Active",
+            "de": "Aktiv",
+            "fr": "Actif"
+        ],
+        "status_ready": [
+            "en": "Ready",
+            "de": "Bereit",
+            "fr": "Prêt"
+        ],
+        "status_disabled": [
+            "en": "Disabled",
+            "de": "Deaktiviert",
+            "fr": "Désactivé"
+        ],
+        "status_not_connected": [
+            "en": "Not connected • Last seen %@",
+            "de": "Nicht verbunden • Zuletzt gesehen %@",
+            "fr": "Non connecté • Vu pour la dernière fois %@"
+        ],
+        "status_disconnected": [
+            "en": "Device is currently disconnected",
+            "de": "Gerät ist derzeit nicht verbunden",
+            "fr": "L'appareil est actuellement déconnecté"
+        ],
 
-            // Device Status
-            "status_disabled": "Désactivé",
-            "status_not_connected": "Non connecté • Vu pour la dernière fois %@",
-            "status_active": "Actuellement actif",
-            "status_ready": "Prêt",
-            "status_disconnected": "L'appareil est déconnecté",
+        // Search
+        "search_placeholder": [
+            "en": "Search devices...",
+            "de": "Geräte suchen...",
+            "fr": "Rechercher des appareils..."
+        ],
 
-            // Empty State
-            "empty_input_title": "Aucun Périphérique d'Entrée",
-            "empty_output_title": "Aucun Périphérique de Sortie",
-            "empty_subtitle": "Connectez un périphérique audio pour le voir ici",
+        // Device List
+        "no_devices": [
+            "en": "No devices found",
+            "de": "Keine Geräte gefunden",
+            "fr": "Aucun appareil trouvé"
+        ],
+        "priority": [
+            "en": "Priority %d",
+            "de": "Priorität %d",
+            "fr": "Priorité %d"
+        ],
 
-            // Context Menu
-            "menu_set_default": "Définir par Défaut",
-            "menu_disable": "Désactiver l'Appareil",
-            "menu_enable": "Activer l'Appareil",
-            "menu_edit_shortcut": "Modifier le raccourci",
-            "menu_clear_shortcut": "Effacer le raccourci",
+        // Context Menu
+        "menu_set_default": [
+            "en": "Set as Default",
+            "de": "Als Standard festlegen",
+            "fr": "Définir par défaut"
+        ],
+        "menu_enable": [
+            "en": "Enable",
+            "de": "Aktivieren",
+            "fr": "Activer"
+        ],
+        "menu_disable": [
+            "en": "Disable",
+            "de": "Deaktivieren",
+            "fr": "Désactiver"
+        ],
+        "menu_edit_shortcut": [
+            "en": "Edit Keyboard Shortcut",
+            "de": "Tastenkürzel bearbeiten",
+            "fr": "Modifier le raccourci clavier"
+        ],
+        "menu_clear_shortcut": [
+            "en": "Clear Keyboard Shortcut",
+            "de": "Tastenkürzel löschen",
+            "fr": "Effacer le raccourci clavier"
+        ],
 
-            // Settings
-            "settings_title": "Paramètres",
-            "settings_general": "Général",
-            "settings_audio": "Gestion Audio",
-            "settings_about": "À propos",
+        // Settings
+        "settings_title": [
+            "en": "Settings",
+            "de": "Einstellungen",
+            "fr": "Paramètres"
+        ],
+        "settings_general": [
+            "en": "General",
+            "de": "Allgemein",
+            "fr": "Général"
+        ],
+        "settings_start_login": [
+            "en": "Start at Login",
+            "de": "Bei Anmeldung starten",
+            "fr": "Lancer au démarrage"
+        ],
+        "settings_show_dock": [
+            "en": "Show in Dock",
+            "de": "Im Dock anzeigen",
+            "fr": "Afficher dans le Dock"
+        ],
+        "settings_check_interval": [
+            "en": "Check Interval",
+            "de": "Prüfintervall",
+            "fr": "Intervalle de vérification"
+        ],
+        "settings_seconds": [
+            "en": "%g seconds",
+            "de": "%g Sekunden",
+            "fr": "%g secondes"
+        ],
+        "settings_device_management": [
+            "en": "Device Management",
+            "de": "Geräteverwaltung",
+            "fr": "Gestion des appareils"
+        ],
+        "settings_reset_priorities": [
+            "en": "Reset All Priorities",
+            "de": "Alle Prioritäten zurücksetzen",
+            "fr": "Réinitialiser toutes les priorités"
+        ],
+        "settings_clear_disconnected": [
+            "en": "Clear Disconnected Devices",
+            "de": "Getrennte Geräte entfernen",
+            "fr": "Effacer les appareils déconnectés"
+        ],
+        "settings_about": [
+            "en": "About",
+            "de": "Über",
+            "fr": "À propos"
+        ],
+        "settings_version": [
+            "en": "Version %@",
+            "de": "Version %@",
+            "fr": "Version %@"
+        ],
+        "settings_developer": [
+            "en": "Developed by %@",
+            "de": "Entwickelt von %@",
+            "fr": "Développé par %@"
+        ],
+        "settings_quit": [
+            "en": "Quit AudioCascade",
+            "de": "AudioCascade beenden",
+            "fr": "Quitter AudioCascade"
+        ],
 
-            // Settings Options
-            "settings_start_login": "Lancer au Démarrage",
-            "settings_show_dock": "Afficher dans le Dock",
-            "settings_check_interval": "Intervalle de Vérification",
-            "settings_reset_priorities": "Réinitialiser Toutes les Priorités",
-            "settings_clear_disconnected": "Effacer les Appareils Déconnectés",
-            "settings_version": "Version",
-            "settings_github": "Dépôt GitHub",
-            "settings_report_issue": "Signaler un Problème",
+        // Confirmations
+        "confirm_reset": [
+            "en": "Reset complete",
+            "de": "Zurücksetzen abgeschlossen",
+            "fr": "Réinitialisation terminée"
+        ],
+        "confirm_cleared": [
+            "en": "Cleared %d devices",
+            "de": "%d Geräte entfernt",
+            "fr": "%d appareils effacés"
+        ],
 
-            // Alerts
-            "alert_reset_title": "Réinitialiser les Priorités?",
-            "alert_reset_message": "Cela réinitialisera toutes les priorités des appareils à leur ordre par défaut.",
-            "alert_clear_title": "Effacer les Appareils Déconnectés?",
-            "alert_clear_message": "Cela supprimera tous les appareils déconnectés de votre liste enregistrée.",
-            "alert_cancel": "Annuler",
-            "alert_reset": "Réinitialiser",
-            "alert_clear": "Effacer",
+        // Shortcut
+        "shortcut_title": [
+            "en": "Keyboard Shortcut",
+            "de": "Tastaturkürzel",
+            "fr": "Raccourci clavier"
+        ],
+        "shortcut_edit": [
+            "en": "Edit Shortcut",
+            "de": "Tastenkürzel bearbeiten",
+            "fr": "Modifier le raccourci"
+        ],
+        "shortcut_help": [
+            "en": "Press any key combination with modifiers (⌘, ⇧, ⌥, ⌃)",
+            "de": "Drücke eine Tastenkombination mit Modifikatoren (⌘, ⇧, ⌥, ⌃)",
+            "fr": "Appuyez sur une combinaison de touches avec modificateurs (⌘, ⇧, ⌥, ⌃)"
+        ],
 
-            // Shortcut related
-            "shortcut_title": "Définir le raccourci clavier",
-            "shortcut_recording": "Enregistrement...",
-            "shortcut_none": "Cliquer pour définir",
-            "shortcut_clear": "Effacer le raccourci",
-            "shortcut_edit": "Modifier le raccourci clavier",
-            "shortcut_help": "Appuyez sur une combinaison de touches avec modificateurs\n(⌘, ⇧, ⌥, ⌃)",
-            "done": "Terminé"
+        // Manual Mode
+        "manual_mode_active": [
+            "en": "Manual Mode Active - Automatic switching paused",
+            "de": "Manueller Modus aktiv - Automatisches Umschalten pausiert",
+            "fr": "Mode manuel actif - Commutation automatique en pause"
+        ],
+        "manual_mode_disable": [
+            "en": "Resume Auto",
+            "de": "Auto fortsetzen",
+            "fr": "Reprendre auto"
+        ],
+
+        // Permissions
+        "permission_title": [
+            "en": "Enable Keyboard Shortcuts",
+            "de": "Tastaturkürzel aktivieren",
+            "fr": "Activer les raccourcis clavier"
+        ],
+        "permission_description": [
+            "en": "AudioCascade needs accessibility permissions to use global keyboard shortcuts for instant device switching.",
+            "de": "AudioCascade benötigt Bedienungshilfen-Berechtigungen für globale Tastaturkürzel zum sofortigen Gerätewechsel.",
+            "fr": "AudioCascade a besoin des autorisations d'accessibilité pour utiliser les raccourcis clavier globaux."
+        ],
+        "permission_feature_shortcuts": [
+            "en": "Quick Switch",
+            "de": "Schnellwechsel",
+            "fr": "Changement rapide"
+        ],
+        "permission_feature_global": [
+            "en": "Works Everywhere",
+            "de": "Überall verfügbar",
+            "fr": "Fonctionne partout"
+        ],
+        "permission_feature_secure": [
+            "en": "Privacy First",
+            "de": "Datenschutz zuerst",
+            "fr": "Confidentialité"
+        ],
+        "permission_instructions": [
+            "en": "How to enable:",
+            "de": "So aktivieren Sie:",
+            "fr": "Comment activer:"
+        ],
+        "permission_step1": [
+            "en": "Click \"Open Settings\" below",
+            "de": "Klicke unten auf \"Einstellungen öffnen\"",
+            "fr": "Cliquez sur \"Ouvrir les paramètres\""
+        ],
+        "permission_step2": [
+            "en": "Find AudioCascade in the list",
+            "de": "Finde AudioCascade in der Liste",
+            "fr": "Trouvez AudioCascade dans la liste"
+        ],
+        "permission_step3": [
+            "en": "Toggle the switch to enable",
+            "de": "Schalter zum Aktivieren umlegen",
+            "fr": "Activez l'interrupteur"
+        ],
+        "permission_later": [
+            "en": "Maybe Later",
+            "de": "Später",
+            "fr": "Plus tard"
+        ],
+        "permission_open_settings": [
+            "en": "Open Settings",
+            "de": "Einstellungen öffnen",
+            "fr": "Ouvrir les paramètres"
+        ],
+
+        // Common
+        "done": [
+            "en": "Done",
+            "de": "Fertig",
+            "fr": "Terminé"
         ]
     ]
-
-    private var currentLanguage: String {
-        let preferredLanguages = Locale.preferredLanguages
-        for language in preferredLanguages {
-            let languageCode = String(language.prefix(2))
-            if translations[languageCode] != nil {
-                return languageCode
-            }
-        }
-        return "en"
-    }
-
-    func localized(_ key: String) -> String {
-        return translations[currentLanguage]?[key] ?? translations["en"]?[key] ?? key
-    }
-
-    func localized(_ key: String, with arguments: CVarArg...) -> String {
-        let format = localized(key)
-        return String(format: format, arguments: arguments)
-    }
 }
 
-// Update the String extension to use our Localization struct
 extension String {
     var localized: String {
-        return Localization.shared.localized(self)
+        let languageCode = Locale.current.language.languageCode?.identifier ?? "en"
+        let supportedLanguage = ["en", "de", "fr"].contains(languageCode) ? languageCode : "en"
+
+        return Localization.strings[self]?[supportedLanguage] ?? self
     }
 
-    func localized(with arguments: CVarArg...) -> String {
-        return Localization.shared.localized(self, with: arguments)
+    func localized(with args: CVarArg...) -> String {
+        let format = self.localized
+        return String(format: format, arguments: args)
     }
 }

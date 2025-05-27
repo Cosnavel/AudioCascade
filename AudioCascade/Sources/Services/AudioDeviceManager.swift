@@ -10,6 +10,7 @@ class AudioDeviceManager: ObservableObject {
     @Published var outputDevices: [AudioDevice] = []
     @Published var currentInputDevice: AudioDevice?
     @Published var currentOutputDevice: AudioDevice?
+    @Published var isManualModeActive: Bool = false
 
     private var audioDeviceListener: AudioDeviceListener?
     private var timer: Timer?
@@ -384,6 +385,7 @@ class AudioDeviceManager: ObservableObject {
             // Mark this as a manual switch if specified
             if isManual {
                 lastManualSwitchTime = Date()
+                isManualModeActive = true
             }
         }
     }
@@ -447,6 +449,15 @@ class AudioDeviceManager: ObservableObject {
         return 0
     }
 
+    func disableManualMode() {
+        isManualModeActive = false
+        lastManualSwitchTime = nil
+        print("Manual mode disabled, returning to automatic priority")
+
+        // Immediately check and apply priorities
+        checkAndApplyPriorities()
+    }
+
     private func checkAndApplyPriorities() {
         // Don't auto-switch if we just did a manual switch
         if let lastSwitch = lastManualSwitchTime,
@@ -454,39 +465,44 @@ class AudioDeviceManager: ObservableObject {
             return
         }
 
-        // Check if current devices are still the best available
-        // Only switch if there's a better device or current is disconnected
-
-        // Check input devices
-        if let currentInput = currentInputDevice {
-            // Only switch if current device is disconnected or disabled
-            if !currentInput.isCurrentlyConnected || !currentInput.isEnabled {
+        // If manual mode is active, only switch on disconnect/disable
+        if isManualModeActive {
+            // Check if current devices are still valid
+            if let currentInput = currentInputDevice,
+               (!currentInput.isCurrentlyConnected || !currentInput.isEnabled) {
+                // Current input is invalid, find replacement
                 if let bestInput = inputDevices.first(where: { $0.isEnabled && $0.isCurrentlyConnected }) {
-                    print("Current input disconnected, switching to \(bestInput.name)")
+                    print("Current input disconnected/disabled, switching to \(bestInput.name)")
                     setDevice(bestInput, for: .input)
                 }
             }
-        } else {
-            // No current device, set the best one
-            if let bestInput = inputDevices.first(where: { $0.isEnabled && $0.isCurrentlyConnected }) {
-                print("No current input, setting \(bestInput.name)")
+
+            if let currentOutput = currentOutputDevice,
+               (!currentOutput.isCurrentlyConnected || !currentOutput.isEnabled) {
+                // Current output is invalid, find replacement
+                if let bestOutput = outputDevices.first(where: { $0.isEnabled && $0.isCurrentlyConnected }) {
+                    print("Current output disconnected/disabled, switching to \(bestOutput.name)")
+                    setDevice(bestOutput, for: .output)
+                }
+            }
+            return
+        }
+
+        // Normal priority-based switching (when not in manual mode)
+        // Check input devices
+        if let bestInput = inputDevices.first(where: { $0.isEnabled && $0.isCurrentlyConnected }) {
+            let currentUID = currentInputDevice?.uid
+            if currentUID != bestInput.uid {
+                print("Switching input from \(currentInputDevice?.name ?? "none") to \(bestInput.name)")
                 setDevice(bestInput, for: .input)
             }
         }
 
         // Check output devices
-        if let currentOutput = currentOutputDevice {
-            // Only switch if current device is disconnected or disabled
-            if !currentOutput.isCurrentlyConnected || !currentOutput.isEnabled {
-                if let bestOutput = outputDevices.first(where: { $0.isEnabled && $0.isCurrentlyConnected }) {
-                    print("Current output disconnected, switching to \(bestOutput.name)")
-                    setDevice(bestOutput, for: .output)
-                }
-            }
-        } else {
-            // No current device, set the best one
-            if let bestOutput = outputDevices.first(where: { $0.isEnabled && $0.isCurrentlyConnected }) {
-                print("No current output, setting \(bestOutput.name)")
+        if let bestOutput = outputDevices.first(where: { $0.isEnabled && $0.isCurrentlyConnected }) {
+            let currentUID = currentOutputDevice?.uid
+            if currentUID != bestOutput.uid {
+                print("Switching output from \(currentOutputDevice?.name ?? "none") to \(bestOutput.name)")
                 setDevice(bestOutput, for: .output)
             }
         }
