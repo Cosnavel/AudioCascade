@@ -1,5 +1,6 @@
 import Foundation
 import CoreAudio
+import SwiftUI
 
 class AudioDevice: Identifiable, Codable, Equatable, Hashable, ObservableObject {
     let id: UUID
@@ -11,6 +12,7 @@ class AudioDevice: Identifiable, Codable, Equatable, Hashable, ObservableObject 
     @Published var isEnabled: Bool
     @Published var lastSeen: Date
     @Published var isCurrentlyConnected: Bool
+    @Published var keyboardShortcut: KeyboardShortcut?
 
     init(name: String, uid: String, isInput: Bool, isOutput: Bool, priority: Int = Int.max, isEnabled: Bool = true, lastSeen: Date = Date(), isCurrentlyConnected: Bool = true) {
         self.id = UUID()
@@ -22,11 +24,12 @@ class AudioDevice: Identifiable, Codable, Equatable, Hashable, ObservableObject 
         self.isEnabled = isEnabled
         self.lastSeen = lastSeen
         self.isCurrentlyConnected = isCurrentlyConnected
+        self.keyboardShortcut = nil
     }
 
     // Codable conformance
     enum CodingKeys: String, CodingKey {
-        case id, name, uid, isInput, isOutput, priority, isEnabled, lastSeen, isCurrentlyConnected
+        case id, name, uid, isInput, isOutput, priority, isEnabled, lastSeen, isCurrentlyConnected, keyboardShortcut
     }
 
     required init(from decoder: Decoder) throws {
@@ -40,6 +43,7 @@ class AudioDevice: Identifiable, Codable, Equatable, Hashable, ObservableObject 
         isEnabled = try container.decode(Bool.self, forKey: .isEnabled)
         lastSeen = try container.decode(Date.self, forKey: .lastSeen)
         isCurrentlyConnected = try container.decode(Bool.self, forKey: .isCurrentlyConnected)
+        keyboardShortcut = try container.decodeIfPresent(KeyboardShortcut.self, forKey: .keyboardShortcut)
     }
 
     func encode(to encoder: Encoder) throws {
@@ -53,6 +57,7 @@ class AudioDevice: Identifiable, Codable, Equatable, Hashable, ObservableObject 
         try container.encode(isEnabled, forKey: .isEnabled)
         try container.encode(lastSeen, forKey: .lastSeen)
         try container.encode(isCurrentlyConnected, forKey: .isCurrentlyConnected)
+        try container.encodeIfPresent(keyboardShortcut, forKey: .keyboardShortcut)
     }
 
     static func == (lhs: AudioDevice, rhs: AudioDevice) -> Bool {
@@ -77,5 +82,28 @@ enum AudioDeviceType: String, CaseIterable {
         case .output:
             return "speaker.wave.2"
         }
+    }
+}
+
+// Custom KeyboardShortcut struct that's Codable
+struct KeyboardShortcut: Codable, Equatable {
+    let key: String
+    let modifiers: Set<ModifierKey>
+
+    enum ModifierKey: String, Codable {
+        case command = "cmd"
+        case shift = "shift"
+        case option = "opt"
+        case control = "ctrl"
+    }
+
+    var displayString: String {
+        var result = ""
+        if modifiers.contains(.control) { result += "⌃" }
+        if modifiers.contains(.option) { result += "⌥" }
+        if modifiers.contains(.shift) { result += "⇧" }
+        if modifiers.contains(.command) { result += "⌘" }
+        result += key.uppercased()
+        return result
     }
 }

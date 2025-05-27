@@ -32,6 +32,8 @@ struct Localization {
             "menu_set_default": "Set as Default",
             "menu_disable": "Disable Device",
             "menu_enable": "Enable Device",
+            "menu_edit_shortcut": "Edit Shortcut",
+            "menu_clear_shortcut": "Clear Shortcut",
 
             // Settings
             "settings_title": "Settings",
@@ -56,7 +58,16 @@ struct Localization {
             "alert_clear_message": "This will remove all disconnected devices from your saved list.",
             "alert_cancel": "Cancel",
             "alert_reset": "Reset",
-            "alert_clear": "Clear"
+            "alert_clear": "Clear",
+
+            // Shortcut related
+            "shortcut_title": "Set Keyboard Shortcut",
+            "shortcut_recording": "Recording...",
+            "shortcut_none": "Click to set",
+            "shortcut_clear": "Clear shortcut",
+            "shortcut_edit": "Edit keyboard shortcut",
+            "shortcut_help": "Press any key combination with modifiers\n(⌘, ⇧, ⌥, ⌃)",
+            "done": "Done"
         ],
         "de": [
             // App Name
@@ -86,6 +97,8 @@ struct Localization {
             "menu_set_default": "Als Standard festlegen",
             "menu_disable": "Gerät deaktivieren",
             "menu_enable": "Gerät aktivieren",
+            "menu_edit_shortcut": "Tastenkürzel bearbeiten",
+            "menu_clear_shortcut": "Tastenkürzel entfernen",
 
             // Settings
             "settings_title": "Einstellungen",
@@ -110,7 +123,16 @@ struct Localization {
             "alert_clear_message": "Dies entfernt alle getrennten Geräte aus deiner gespeicherten Liste.",
             "alert_cancel": "Abbrechen",
             "alert_reset": "Zurücksetzen",
-            "alert_clear": "Entfernen"
+            "alert_clear": "Entfernen",
+
+            // Shortcut related
+            "shortcut_title": "Tastenkürzel festlegen",
+            "shortcut_recording": "Aufnahme...",
+            "shortcut_none": "Klicken zum Setzen",
+            "shortcut_clear": "Tastenkürzel löschen",
+            "shortcut_edit": "Tastenkürzel bearbeiten",
+            "shortcut_help": "Drücken Sie eine Tastenkombination mit Modifikatoren\n(⌘, ⇧, ⌥, ⌃)",
+            "done": "Fertig"
         ],
         "fr": [
             // App Name
@@ -140,6 +162,8 @@ struct Localization {
             "menu_set_default": "Définir par Défaut",
             "menu_disable": "Désactiver l'Appareil",
             "menu_enable": "Activer l'Appareil",
+            "menu_edit_shortcut": "Modifier le raccourci",
+            "menu_clear_shortcut": "Effacer le raccourci",
 
             // Settings
             "settings_title": "Paramètres",
@@ -164,7 +188,16 @@ struct Localization {
             "alert_clear_message": "Cela supprimera tous les appareils déconnectés de votre liste enregistrée.",
             "alert_cancel": "Annuler",
             "alert_reset": "Réinitialiser",
-            "alert_clear": "Effacer"
+            "alert_clear": "Effacer",
+
+            // Shortcut related
+            "shortcut_title": "Définir le raccourci clavier",
+            "shortcut_recording": "Enregistrement...",
+            "shortcut_none": "Cliquer pour définir",
+            "shortcut_clear": "Effacer le raccourci",
+            "shortcut_edit": "Modifier le raccourci clavier",
+            "shortcut_help": "Appuyez sur une combinaison de touches avec modificateurs\n(⌘, ⇧, ⌥, ⌃)",
+            "done": "Terminé"
         ]
     ]
 

@@ -2,6 +2,8 @@ import Foundation
 import CoreAudio
 import AVFoundation
 import Combine
+import Carbon
+import AppKit
 
 class AudioDeviceManager: ObservableObject {
     @Published var inputDevices: [AudioDevice] = []
@@ -12,16 +14,44 @@ class AudioDeviceManager: ObservableObject {
     private var audioDeviceListener: AudioDeviceListener?
     private var timer: Timer?
     private let userDefaults = UserDefaults.standard
+    private var eventMonitor: Any?
+    private var lastManualSwitchTime: Date?
+    private let manualSwitchDelay: TimeInterval = 3.0 // Don't auto-switch for 3 seconds after manual switch
+    private var notificationsEnabled = false
 
     init() {
         loadSavedDevices()
         setupAudioDeviceListener()
         refreshDevices()
         startMonitoring()
+        setupGlobalHotkeys()
+        // Don't request notifications in debug builds
+        #if !DEBUG
+        requestNotificationPermission()
+        #endif
     }
 
     deinit {
         timer?.invalidate()
+        if let monitor = eventMonitor {
+            NSEvent.removeMonitor(monitor)
+        }
+    }
+
+    private func requestNotificationPermission() {
+        // Only try to use notifications if we have a proper bundle
+        guard Bundle.main.bundleIdentifier != nil else {
+            print("Running from command line, notifications disabled")
+            return
+        }
+
+        do {
+            // Dynamic import to avoid crash
+            if let notificationCenter = NSClassFromString("UNUserNotificationCenter") as? NSObject.Type {
+                notificationsEnabled = true
+                // We'll handle notifications differently
+            }
+        }
     }
 
     private func setupAudioDeviceListener() {
@@ -350,6 +380,9 @@ class AudioDeviceManager: ObservableObject {
             } else {
                 currentOutputDevice = device
             }
+
+            // Mark this as a manual switch
+            lastManualSwitchTime = Date()
         }
     }
 
@@ -413,6 +446,12 @@ class AudioDeviceManager: ObservableObject {
     }
 
     private func checkAndApplyPriorities() {
+        // Don't auto-switch if we just did a manual switch
+        if let lastSwitch = lastManualSwitchTime,
+           Date().timeIntervalSince(lastSwitch) < manualSwitchDelay {
+            return
+        }
+
         // Check input devices
         if let bestInput = inputDevices.first(where: { $0.isEnabled && $0.isCurrentlyConnected }) {
             let currentUID = currentInputDevice?.uid
@@ -549,7 +588,7 @@ class AudioDeviceManager: ObservableObject {
         checkAndApplyPriorities()
     }
 
-    private func saveDevices() {
+    func saveDevices() {
         if let inputData = try? JSONEncoder().encode(inputDevices) {
             userDefaults.set(inputData, forKey: "SavedInputDevices")
         }
@@ -621,6 +660,95 @@ class AudioDeviceManager: ObservableObject {
             self?.timer = Timer.scheduledTimer(withTimeInterval: interval, repeats: true) { [weak self] _ in
                 self?.checkAndApplyPriorities()
             }
+        }
+    }
+
+    private func setupGlobalHotkeys() {
+        // Remove existing monitor if any
+        if let monitor = eventMonitor {
+            NSEvent.removeMonitor(monitor)
+        }
+
+        // Setup global event monitor for keyboard shortcuts
+        eventMonitor = NSEvent.addGlobalMonitorForEvents(matching: .keyDown) { [weak self] event in
+            self?.handleKeyEvent(event)
+        }
+
+        // Also monitor local events when app is active
+        NSEvent.addLocalMonitorForEvents(matching: .keyDown) { [weak self] event in
+            if self?.handleKeyEvent(event) == true {
+                return nil // Consume the event
+            }
+            return event
+        }
+    }
+
+    private func handleKeyEvent(_ event: NSEvent) -> Bool {
+        // Get modifiers
+        var modifiers: Set<KeyboardShortcut.ModifierKey> = []
+        if event.modifierFlags.contains(.command) { modifiers.insert(.command) }
+        if event.modifierFlags.contains(.shift) { modifiers.insert(.shift) }
+        if event.modifierFlags.contains(.option) { modifiers.insert(.option) }
+        if event.modifierFlags.contains(.control) { modifiers.insert(.control) }
+
+        guard !modifiers.isEmpty,
+              let characters = event.charactersIgnoringModifiers else {
+            return false
+        }
+
+        // Check all devices for matching shortcuts
+        let allDevices = inputDevices + outputDevices
+
+        for device in allDevices {
+            if let shortcut = device.keyboardShortcut,
+               shortcut.key.lowercased() == characters.lowercased(),
+               shortcut.modifiers == modifiers,
+               device.isEnabled && device.isCurrentlyConnected {
+
+                // Switch to this device
+                DispatchQueue.main.async { [weak self] in
+                    if device.isInput {
+                        self?.setDevice(device, for: .input)
+                        self?.showNotification(
+                            title: "Input Device Changed",
+                            subtitle: "Switched to \(device.name)",
+                            shortcut: shortcut.displayString
+                        )
+                        print("Switched input to \(device.name) via keyboard shortcut")
+                    }
+                    if device.isOutput {
+                        self?.setDevice(device, for: .output)
+                        self?.showNotification(
+                            title: "Output Device Changed",
+                            subtitle: "Switched to \(device.name)",
+                            shortcut: shortcut.displayString
+                        )
+                        print("Switched output to \(device.name) via keyboard shortcut")
+                    }
+                }
+
+                return true // Event handled
+            }
+        }
+
+        return false
+    }
+
+    private func showNotification(title: String, subtitle: String, shortcut: String) {
+        // For now, just print to console in debug builds
+        print("🔔 \(title): \(subtitle) [\(shortcut)]")
+
+        // Use NSUserNotificationCenter as fallback (deprecated but works)
+        if #available(macOS 11.0, *) {
+            // Skip notifications in debug for now
+        } else {
+            let notification = NSUserNotification()
+            notification.title = title
+            notification.subtitle = subtitle
+            notification.informativeText = "Triggered by \(shortcut)"
+            notification.soundName = NSUserNotificationDefaultSoundName
+
+            NSUserNotificationCenter.default.deliver(notification)
         }
     }
 }

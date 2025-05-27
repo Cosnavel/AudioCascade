@@ -40,6 +40,8 @@
     <string>public.app-category.utilities</string>
     <key>NSMicrophoneUsageDescription</key>
     <string>AudioCascade needs access to audio devices to manage and switch between them.</string>
+    <key>NSUserNotificationAlertStyle</key>
+    <string>alert</string>
     <key>CFBundleLocalizations</key>
     <array>
         <string>en</string>

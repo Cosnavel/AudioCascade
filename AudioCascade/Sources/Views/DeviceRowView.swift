@@ -7,6 +7,7 @@ struct DeviceRowView: View {
     let isDragging: Bool
     @EnvironmentObject var audioManager: AudioDeviceManager
     @State private var isHovering = false
+    @State private var isEditingShortcut = false
 
     var body: some View {
         HStack(spacing: 12) {
@@ -47,15 +48,40 @@ struct DeviceRowView: View {
                     }
                 }
 
-                Text(statusText)
-                    .font(.caption)
-                    .foregroundColor(.secondary)
+                HStack(spacing: 8) {
+                    Text(statusText)
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+
+                    if let shortcut = device.keyboardShortcut {
+                        Text(shortcut.displayString)
+                            .font(.system(.caption, design: .monospaced))
+                            .padding(.horizontal, 6)
+                            .padding(.vertical, 2)
+                            .background(Color.accentColor.opacity(0.2))
+                            .cornerRadius(4)
+                    }
+                }
             }
 
             Spacer()
 
             // Action Buttons
             HStack(spacing: 8) {
+                // Shortcut Button
+                Button(action: {
+                    isEditingShortcut.toggle()
+                }) {
+                    Image(systemName: device.keyboardShortcut != nil ? "command.square.fill" : "command.square")
+                        .font(.system(size: 14))
+                        .foregroundColor(device.keyboardShortcut != nil ? .white : .secondary)
+                        .frame(width: 20, height: 20)
+                        .background(device.keyboardShortcut != nil ? Color.accentColor : Color.clear)
+                        .cornerRadius(4)
+                }
+                .buttonStyle(.plain)
+                .help(device.keyboardShortcut != nil ? "Shortcut: \(device.keyboardShortcut!.displayString)" : "shortcut_edit".localized)
+
                 // Move Up/Down
                 if audioManager.inputDevices.count > 1 || audioManager.outputDevices.count > 1 {
                     Button(action: { audioManager.moveDevice(device, direction: .up) }) {
@@ -105,9 +131,53 @@ struct DeviceRowView: View {
 
             Divider()
 
+            Button("menu_edit_shortcut".localized) {
+                isEditingShortcut = true
+            }
+
+            if device.keyboardShortcut != nil {
+                Button("menu_clear_shortcut".localized) {
+                    device.keyboardShortcut = nil
+                    audioManager.saveDevices()
+                }
+            }
+
+            Divider()
+
             Button(device.isEnabled ? "menu_disable".localized : "menu_enable".localized) {
                 audioManager.toggleDeviceEnabled(device)
             }
+        }
+        .popover(isPresented: $isEditingShortcut) {
+            VStack(spacing: 12) {
+                Text("shortcut_title".localized)
+                    .font(.headline)
+
+                Text(device.name)
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+
+                ShortcutRecorderView(shortcut: Binding(
+                    get: { device.keyboardShortcut },
+                    set: { newShortcut in
+                        device.keyboardShortcut = newShortcut
+                        audioManager.saveDevices()
+                    }
+                ))
+
+                Text("shortcut_help".localized)
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                    .multilineTextAlignment(.center)
+
+                Button("done".localized) {
+                    isEditingShortcut = false
+                }
+                .buttonStyle(.borderedProminent)
+                .controlSize(.small)
+            }
+            .padding()
+            .frame(width: 300)
         }
     }
 
