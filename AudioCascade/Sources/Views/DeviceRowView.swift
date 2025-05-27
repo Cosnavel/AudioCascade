@@ -4,6 +4,7 @@ struct DeviceRowView: View {
     @ObservedObject var device: AudioDevice
     let isCurrentDevice: Bool
     let deviceType: AudioDeviceType
+    let isDragging: Bool
     @EnvironmentObject var audioManager: AudioDeviceManager
     @State private var isHovering = false
 
@@ -91,6 +92,7 @@ struct DeviceRowView: View {
                 .stroke(borderColor, lineWidth: isCurrentDevice ? 2 : 1)
         )
         .scaleEffect(isHovering ? 1.02 : 1.0)
+        .opacity(isDragging ? 0.5 : 1.0)
         .animation(.easeInOut(duration: 0.2), value: isHovering)
         .onHover { hovering in
             isHovering = hovering

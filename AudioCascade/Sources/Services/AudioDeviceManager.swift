@@ -511,6 +511,44 @@ class AudioDeviceManager: ObservableObject {
         }
     }
 
+    func reorderInputDevice(from sourceIndex: Int, to destinationIndex: Int) {
+        objectWillChange.send()
+
+        guard sourceIndex >= 0 && sourceIndex < inputDevices.count,
+              destinationIndex >= 0 && destinationIndex < inputDevices.count else { return }
+
+        // Move the device
+        let movedDevice = inputDevices.remove(at: sourceIndex)
+        inputDevices.insert(movedDevice, at: destinationIndex)
+
+        // Update all priorities based on new positions
+        for (index, _) in inputDevices.enumerated() {
+            inputDevices[index].priority = index + 1
+        }
+
+        saveDevices()
+        checkAndApplyPriorities()
+    }
+
+    func reorderOutputDevice(from sourceIndex: Int, to destinationIndex: Int) {
+        objectWillChange.send()
+
+        guard sourceIndex >= 0 && sourceIndex < outputDevices.count,
+              destinationIndex >= 0 && destinationIndex < outputDevices.count else { return }
+
+        // Move the device
+        let movedDevice = outputDevices.remove(at: sourceIndex)
+        outputDevices.insert(movedDevice, at: destinationIndex)
+
+        // Update all priorities based on new positions
+        for (index, _) in outputDevices.enumerated() {
+            outputDevices[index].priority = index + 1
+        }
+
+        saveDevices()
+        checkAndApplyPriorities()
+    }
+
     private func saveDevices() {
         if let inputData = try? JSONEncoder().encode(inputDevices) {
             userDefaults.set(inputData, forKey: "SavedInputDevices")
