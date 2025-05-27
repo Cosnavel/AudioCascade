@@ -86,19 +86,39 @@ class AudioDeviceManager: ObservableObject {
         }
 
         // Add new devices that aren't in our saved list
+        var newlyConnectedDevices: [AudioDevice] = []
+
         for systemDevice in systemDevices {
             if systemDevice.isInput && !newInputs.contains(where: { $0.uid == systemDevice.uid }) {
                 let newDevice = systemDevice
-                newDevice.priority = newInputs.count + 1
+                // New devices get priority 1
+                newDevice.priority = 1
+
+                // Shift all existing priorities down
+                for existingDevice in newInputs {
+                    existingDevice.priority += 1
+                }
+
                 newInputs.append(newDevice)
+                newlyConnectedDevices.append(newDevice)
                 connectionChanged = true
+                print("New input device detected: \(newDevice.name) - Setting as priority 1")
             }
 
             if systemDevice.isOutput && !newOutputs.contains(where: { $0.uid == systemDevice.uid }) {
                 let newDevice = systemDevice
-                newDevice.priority = newOutputs.count + 1
+                // New devices get priority 1
+                newDevice.priority = 1
+
+                // Shift all existing priorities down
+                for existingDevice in newOutputs {
+                    existingDevice.priority += 1
+                }
+
                 newOutputs.append(newDevice)
+                newlyConnectedDevices.append(newDevice)
                 connectionChanged = true
+                print("New output device detected: \(newDevice.name) - Setting as priority 1")
             }
         }
 
@@ -112,8 +132,22 @@ class AudioDeviceManager: ObservableObject {
 
         saveDevices()
 
-        // If any device connection changed, immediately apply priorities
-        if connectionChanged {
+        // If we have newly connected devices, set them as default immediately
+        if !newlyConnectedDevices.isEmpty {
+            DispatchQueue.main.async { [weak self] in
+                for device in newlyConnectedDevices {
+                    if device.isInput {
+                        print("Setting new input device as default: \(device.name)")
+                        self?.setDevice(device, for: .input)
+                    }
+                    if device.isOutput {
+                        print("Setting new output device as default: \(device.name)")
+                        self?.setDevice(device, for: .output)
+                    }
+                }
+            }
+        } else if connectionChanged {
+            // For reconnected devices, apply priorities after a delay
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
                 self?.checkAndApplyPriorities()
             }
