@@ -71,16 +71,16 @@ class AudioDevice: Identifiable, Codable, Equatable, Hashable, ObservableObject 
     }
 }
 
-enum AudioDeviceType: String, CaseIterable {
-    case input = "Input"
-    case output = "Output"
+enum AudioDeviceType: CaseIterable {
+    case input
+    case output
 
     var systemSymbol: String {
         switch self {
         case .input:
             return "mic"
         case .output:
-            return "speaker.wave.2"
+            return "hifispeaker"
         }
     }
 }

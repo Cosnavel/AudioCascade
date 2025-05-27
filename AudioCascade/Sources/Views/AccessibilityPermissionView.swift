@@ -32,6 +32,8 @@ struct AccessibilityPermissionView: View {
                     .font(.body)
                     .multilineTextAlignment(.center)
                     .foregroundColor(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .frame(maxWidth: 350)
 
                 HStack(spacing: 16) {
                     FeatureItem(icon: "keyboard", text: "permission_feature_shortcuts".localized)
@@ -47,40 +49,45 @@ struct AccessibilityPermissionView: View {
                     .font(.caption)
                     .fontWeight(.medium)
 
-                HStack(spacing: 8) {
+                HStack(alignment: .top, spacing: 8) {
                     Image(systemName: "1.circle.fill")
                         .font(.caption)
                         .foregroundColor(.accentColor)
                     Text("permission_step1".localized)
                         .font(.caption)
                         .foregroundColor(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
                 }
 
-                HStack(spacing: 8) {
+                HStack(alignment: .top, spacing: 8) {
                     Image(systemName: "2.circle.fill")
                         .font(.caption)
                         .foregroundColor(.accentColor)
                     Text("permission_step2".localized)
                         .font(.caption)
                         .foregroundColor(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
                 }
 
-                HStack(spacing: 8) {
+                HStack(alignment: .top, spacing: 8) {
                     Image(systemName: "3.circle.fill")
                         .font(.caption)
                         .foregroundColor(.accentColor)
                     Text("permission_step3".localized)
                         .font(.caption)
                         .foregroundColor(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
                 }
             }
             .padding()
             .background(Color.gray.opacity(0.1))
             .cornerRadius(8)
+            .frame(maxWidth: 350)
 
             // Buttons
             HStack(spacing: 12) {
                 Button(action: {
+                    UserDefaults.standard.set(true, forKey: "accessibilityPermissionDismissed")
                     isPresented = false
                 }) {
                     Text("permission_later".localized)
@@ -101,7 +108,7 @@ struct AccessibilityPermissionView: View {
             }
         }
         .padding(24)
-        .frame(width: 400)
+        .frame(width: 420)
         .background(Color(NSColor.windowBackgroundColor))
         .cornerRadius(12)
     }
@@ -128,6 +135,7 @@ struct FeatureItem: View {
             Text(text)
                 .font(.caption2)
                 .foregroundColor(.secondary)
+                .multilineTextAlignment(.center)
         }
         .frame(maxWidth: .infinity)
     }
