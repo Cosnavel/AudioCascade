@@ -125,7 +125,7 @@ struct DeviceRowView: View {
         }
         .contextMenu {
             Button("menu_set_default".localized) {
-                audioManager.setDevice(device, for: deviceType)
+                audioManager.setDevice(device, for: deviceType, isManual: true)
             }
             .disabled(!device.isEnabled || !device.isCurrentlyConnected)
 

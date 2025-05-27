@@ -42,6 +42,8 @@
     <string>AudioCascade needs access to audio devices to manage and switch between them.</string>
     <key>NSUserNotificationAlertStyle</key>
     <string>alert</string>
+    <key>NSAppleEventsUsageDescription</key>
+    <string>AudioCascade needs accessibility access to monitor keyboard shortcuts globally.</string>
     <key>CFBundleLocalizations</key>
     <array>
         <string>en</string>

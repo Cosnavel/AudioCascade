@@ -352,7 +352,7 @@ class AudioDeviceManager: ObservableObject {
         }
     }
 
-    func setDevice(_ device: AudioDevice, for type: AudioDeviceType) {
+    func setDevice(_ device: AudioDevice, for type: AudioDeviceType, isManual: Bool = false) {
         guard device.isEnabled && device.isCurrentlyConnected else { return }
 
         let deviceID = getDeviceID(for: device.uid)
@@ -381,8 +381,10 @@ class AudioDeviceManager: ObservableObject {
                 currentOutputDevice = device
             }
 
-            // Mark this as a manual switch
-            lastManualSwitchTime = Date()
+            // Mark this as a manual switch if specified
+            if isManual {
+                lastManualSwitchTime = Date()
+            }
         }
     }
 
@@ -452,20 +454,39 @@ class AudioDeviceManager: ObservableObject {
             return
         }
 
+        // Check if current devices are still the best available
+        // Only switch if there's a better device or current is disconnected
+
         // Check input devices
-        if let bestInput = inputDevices.first(where: { $0.isEnabled && $0.isCurrentlyConnected }) {
-            let currentUID = currentInputDevice?.uid
-            if currentUID != bestInput.uid {
-                print("Switching input from \(currentInputDevice?.name ?? "none") to \(bestInput.name)")
+        if let currentInput = currentInputDevice {
+            // Only switch if current device is disconnected or disabled
+            if !currentInput.isCurrentlyConnected || !currentInput.isEnabled {
+                if let bestInput = inputDevices.first(where: { $0.isEnabled && $0.isCurrentlyConnected }) {
+                    print("Current input disconnected, switching to \(bestInput.name)")
+                    setDevice(bestInput, for: .input)
+                }
+            }
+        } else {
+            // No current device, set the best one
+            if let bestInput = inputDevices.first(where: { $0.isEnabled && $0.isCurrentlyConnected }) {
+                print("No current input, setting \(bestInput.name)")
                 setDevice(bestInput, for: .input)
             }
         }
 
         // Check output devices
-        if let bestOutput = outputDevices.first(where: { $0.isEnabled && $0.isCurrentlyConnected }) {
-            let currentUID = currentOutputDevice?.uid
-            if currentUID != bestOutput.uid {
-                print("Switching output from \(currentOutputDevice?.name ?? "none") to \(bestOutput.name)")
+        if let currentOutput = currentOutputDevice {
+            // Only switch if current device is disconnected or disabled
+            if !currentOutput.isCurrentlyConnected || !currentOutput.isEnabled {
+                if let bestOutput = outputDevices.first(where: { $0.isEnabled && $0.isCurrentlyConnected }) {
+                    print("Current output disconnected, switching to \(bestOutput.name)")
+                    setDevice(bestOutput, for: .output)
+                }
+            }
+        } else {
+            // No current device, set the best one
+            if let bestOutput = outputDevices.first(where: { $0.isEnabled && $0.isCurrentlyConnected }) {
+                print("No current output, setting \(bestOutput.name)")
                 setDevice(bestOutput, for: .output)
             }
         }
@@ -497,7 +518,11 @@ class AudioDeviceManager: ObservableObject {
             if let index = inputDevices.firstIndex(where: { $0.uid == device.uid }) {
                 inputDevices[index].isEnabled.toggle()
                 saveDevices()
-                checkAndApplyPriorities()
+
+                // If we're disabling the current device, switch to next best
+                if !inputDevices[index].isEnabled && currentInputDevice?.uid == device.uid {
+                    checkAndApplyPriorities()
+                }
             }
         }
 
@@ -505,7 +530,11 @@ class AudioDeviceManager: ObservableObject {
             if let index = outputDevices.firstIndex(where: { $0.uid == device.uid }) {
                 outputDevices[index].isEnabled.toggle()
                 saveDevices()
-                checkAndApplyPriorities()
+
+                // If we're disabling the current device, switch to next best
+                if !outputDevices[index].isEnabled && currentOutputDevice?.uid == device.uid {
+                    checkAndApplyPriorities()
+                }
             }
         }
     }
@@ -671,7 +700,7 @@ class AudioDeviceManager: ObservableObject {
 
         // Setup global event monitor for keyboard shortcuts
         eventMonitor = NSEvent.addGlobalMonitorForEvents(matching: .keyDown) { [weak self] event in
-            self?.handleKeyEvent(event)
+            _ = self?.handleKeyEvent(event)
         }
 
         // Also monitor local events when app is active
@@ -708,7 +737,7 @@ class AudioDeviceManager: ObservableObject {
                 // Switch to this device
                 DispatchQueue.main.async { [weak self] in
                     if device.isInput {
-                        self?.setDevice(device, for: .input)
+                        self?.setDevice(device, for: .input, isManual: true)
                         self?.showNotification(
                             title: "Input Device Changed",
                             subtitle: "Switched to \(device.name)",
@@ -717,7 +746,7 @@ class AudioDeviceManager: ObservableObject {
                         print("Switched input to \(device.name) via keyboard shortcut")
                     }
                     if device.isOutput {
-                        self?.setDevice(device, for: .output)
+                        self?.setDevice(device, for: .output, isManual: true)
                         self?.showNotification(
                             title: "Output Device Changed",
                             subtitle: "Switched to \(device.name)",
