@@ -46,12 +46,10 @@ class AudioDeviceManager: ObservableObject {
             return
         }
 
-        do {
-            // Dynamic import to avoid crash
-            if let notificationCenter = NSClassFromString("UNUserNotificationCenter") as? NSObject.Type {
-                notificationsEnabled = true
-                // We'll handle notifications differently
-            }
+        // Dynamic check for notification center availability
+        if NSClassFromString("UNUserNotificationCenter") != nil {
+            notificationsEnabled = true
+            // We'll handle notifications differently
         }
     }
 

@@ -275,7 +275,13 @@ struct Localization {
 
 extension String {
     var localized: String {
-        let languageCode = Locale.current.language.languageCode?.identifier ?? "en"
+        let languageCode: String
+        if #available(macOS 13.0, *) {
+            languageCode = Locale.current.language.languageCode?.identifier ?? "en"
+        } else {
+            // Fallback for macOS 12
+            languageCode = Locale.current.languageCode ?? "en"
+        }
         let supportedLanguage = ["en", "de", "fr"].contains(languageCode) ? languageCode : "en"
 
         return Localization.strings[self]?[supportedLanguage] ?? self

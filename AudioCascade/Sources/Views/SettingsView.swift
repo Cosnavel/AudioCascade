@@ -3,7 +3,7 @@ import ServiceManagement
 
 struct SettingsView: View {
     @EnvironmentObject var audioManager: AudioDeviceManager
-    @AppStorage("autoStartAtLogin") private var autoStartAtLogin = false
+    @AppStorage("startAtLogin") private var startAtLogin = false
     @AppStorage("showInDock") private var showInDock = false
     @AppStorage("checkInterval") private var checkInterval = 1.0
     @Environment(\.dismiss) private var dismiss
@@ -35,124 +35,126 @@ struct SettingsView: View {
             // Settings Content
             Form {
                 Section("settings_general".localized) {
-                    Toggle("settings_start_login".localized, isOn: $autoStartAtLogin)
-                        .onChange(of: autoStartAtLogin) { newValue in
-                            if newValue {
-                                try? SMAppService.mainApp.register()
+                    Toggle("settings_start_login".localized, isOn: Binding(
+                        get: { startAtLogin },
+                        set: { newValue in
+                            startAtLogin = newValue
+                            if #available(macOS 13.0, *) {
+                                if newValue {
+                                    try? SMAppService.mainApp.register()
+                                } else {
+                                    try? SMAppService.mainApp.unregister()
+                                }
                             } else {
-                                try? SMAppService.mainApp.unregister()
+                                // For macOS 12, we'll use the old SMLoginItemSetEnabled
+                                // This requires a helper app, which we'll skip for now
+                                print("Start at login not supported on macOS 12")
                             }
                         }
+                    ))
 
-                    Toggle("settings_show_dock".localized, isOn: $showInDock)
-                        .onChange(of: showInDock) { newValue in
-                            NSApp.setActivationPolicy(newValue ? .regular : .accessory)
+                    Toggle("settings_show_dock".localized, isOn: Binding(
+                        get: { showInDock },
+                        set: { newValue in
+                            showInDock = newValue
+                            if let appDelegate = NSApp.delegate as? AppDelegate {
+                                appDelegate.updateDockVisibility()
+                            }
                         }
+                    ))
+
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("settings_check_interval".localized)
+                        HStack {
+                            Slider(value: $checkInterval, in: 0.5...5.0, step: 0.5)
+                                .onChange(of: checkInterval) { newValue in
+                                    audioManager.updateCheckInterval(newValue)
+                                }
+                            Text("settings_seconds".localized(with: checkInterval))
+                                .frame(width: 80, alignment: .trailing)
+                        }
+                    }
                 }
 
-                Section("settings_audio".localized) {
+                Section("settings_device_management".localized) {
                     HStack {
-                        Text("settings_check_interval".localized)
-                        Slider(value: $checkInterval, in: 0.5...5.0, step: 0.5)
-                            .onChange(of: checkInterval) { newValue in
-                                audioManager.updateCheckInterval(newValue)
-                            }
-                        Text("\(checkInterval, specifier: "%.1f")s")
-                            .monospacedDigit()
-                            .frame(width: 40)
-                    }
-
-                    // Reset Priorities with inline confirmation
-                    if showResetConfirmation {
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text("alert_reset_message".localized)
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-
-                            HStack {
-                                Button("alert_cancel".localized) {
-                                    withAnimation(.easeInOut(duration: 0.2)) {
-                                        showResetConfirmation = false
-                                    }
-                                }
-                                .buttonStyle(.bordered)
-
-                                Button("alert_reset".localized) {
-                                    audioManager.resetAllPriorities()
-                                    withAnimation(.easeInOut(duration: 0.2)) {
-                                        showResetConfirmation = false
-                                    }
-                                }
-                                .buttonStyle(.borderedProminent)
-                                .foregroundColor(.white)
-                                .tint(.red)
-                            }
-                        }
-                        .padding(.vertical, 4)
-                    } else {
                         Button("settings_reset_priorities".localized) {
-                            withAnimation(.easeInOut(duration: 0.2)) {
-                                showResetConfirmation = true
-                                showClearConfirmation = false
-                            }
-                        }
-                        .foregroundColor(.red)
-                    }
+                            audioManager.resetAllPriorities()
+                            showResetConfirmation = true
 
-                    // Clear Disconnected with inline confirmation
-                    if showClearConfirmation {
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text("alert_clear_message".localized)
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-
-                            HStack {
-                                Button("alert_cancel".localized) {
-                                    withAnimation(.easeInOut(duration: 0.2)) {
-                                        showClearConfirmation = false
-                                    }
-                                }
-                                .buttonStyle(.bordered)
-
-                                Button("alert_clear".localized) {
-                                    audioManager.clearDisconnectedDevices()
-                                    withAnimation(.easeInOut(duration: 0.2)) {
-                                        showClearConfirmation = false
-                                    }
-                                }
-                                .buttonStyle(.borderedProminent)
-                                .foregroundColor(.white)
-                                .tint(.orange)
-                            }
-                        }
-                        .padding(.vertical, 4)
-                    } else {
-                        Button("settings_clear_disconnected".localized) {
-                            withAnimation(.easeInOut(duration: 0.2)) {
-                                showClearConfirmation = true
+                            // Hide confirmation after 2 seconds
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                                 showResetConfirmation = false
                             }
+                        }
+
+                        Spacer()
+
+                        if showResetConfirmation {
+                            Label("confirm_reset".localized, systemImage: "checkmark.circle.fill")
+                                .foregroundColor(.green)
+                                .font(.caption)
+                                .transition(.scale.combined(with: .opacity))
+                        }
+                    }
+
+                    HStack {
+                        Button("settings_clear_disconnected".localized) {
+                            let count = audioManager.inputDevices.filter { !$0.isCurrentlyConnected }.count +
+                                       audioManager.outputDevices.filter { !$0.isCurrentlyConnected }.count
+                            audioManager.clearDisconnectedDevices()
+
+                            if count > 0 {
+                                showClearConfirmation = true
+
+                                // Hide confirmation after 2 seconds
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                                    showClearConfirmation = false
+                                }
+                            }
+                        }
+
+                        Spacer()
+
+                        if showClearConfirmation {
+                            Label("confirm_cleared".localized(with: 0), systemImage: "trash.circle.fill")
+                                .foregroundColor(.orange)
+                                .font(.caption)
+                                .transition(.scale.combined(with: .opacity))
                         }
                     }
                 }
 
                 Section("settings_about".localized) {
                     HStack {
-                        Text("settings_version".localized)
+                        Text("settings_version".localized(with: "1.0.0"))
                         Spacer()
-                        Text("1.0.0")
+                        Text("© 2025")
                             .foregroundColor(.secondary)
                     }
 
-                    Link("settings_github".localized, destination: URL(string: "https://github.com/Cosnavel/AudioCascade")!)
-
-                    Link("settings_report_issue".localized, destination: URL(string: "https://github.com/Cosnavel/AudioCascade/issues")!)
+                    HStack {
+                        Text("settings_developer".localized(with: "Niclas Kahlmeier"))
+                        Spacer()
+                        Link("GitHub", destination: URL(string: "https://github.com/Cosnavel/AudioCascade")!)
+                    }
                 }
             }
-            .formStyle(.grouped)
-            .scrollContentBackground(.hidden)
+
+            // Quit Button
+            Section {
+                Button(action: {
+                    NSApp.terminate(nil)
+                }) {
+                    Label("settings_quit".localized, systemImage: "power")
+                        .foregroundColor(.red)
+                }
+                .buttonStyle(.plain)
+            }
         }
-        .frame(width: 400, height: 500)
-        .background(Color(NSColor.windowBackgroundColor))
+        .padding()
+        .frame(width: 350, height: 400)
+        .animation(.easeInOut(duration: 0.2), value: showResetConfirmation)
+        .animation(.easeInOut(duration: 0.2), value: showClearConfirmation)
     }
 }

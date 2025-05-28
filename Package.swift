@@ -5,7 +5,7 @@ let package = Package(
     name: "AudioCascade",
     defaultLocalization: "en",
     platforms: [
-        .macOS(.v13)
+        .macOS(.v12)
     ],
     products: [
         .executable(
@@ -23,8 +23,19 @@ let package = Package(
                 .product(name: "Sparkle", package: "Sparkle")
             ],
             path: "AudioCascade/Sources",
+            exclude: [],
             resources: [
-                .process("../Resources")
+                .copy("../Resources/Assets.xcassets"),
+                .copy("../Resources/Base.lproj"),
+                .copy("../Resources/en.lproj"),
+                .copy("../Resources/de.lproj"),
+                .copy("../Resources/fr.lproj")
+            ],
+            linkerSettings: [
+                .linkedFramework("CoreAudio"),
+                .linkedFramework("AVFoundation"),
+                .linkedFramework("AppKit"),
+                .linkedFramework("Carbon")
             ]
         ),
         .testTarget(
