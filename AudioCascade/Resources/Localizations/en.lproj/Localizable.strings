@@ -55,3 +55,7 @@
 "alert_cancel" = "Cancel";
 "alert_reset" = "Reset";
 "alert_clear" = "Clear";
+
+// Menu
+"menu_open" = "Open AudioCascade";
+"menu_quit" = "Quit";

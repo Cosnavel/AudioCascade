@@ -48,10 +48,14 @@
 "settings_report_issue" = "Signaler un Problème";
 
 // Alerts
-"alert_reset_title" = "Réinitialiser les Priorités?";
+"alert_reset_title" = "Réinitialiser les priorités?";
 "alert_reset_message" = "Cela réinitialisera toutes les priorités des appareils à leur ordre par défaut.";
-"alert_clear_title" = "Effacer les Appareils Déconnectés?";
+"alert_clear_title" = "Effacer les appareils déconnectés?";
 "alert_clear_message" = "Cela supprimera tous les appareils déconnectés de votre liste enregistrée.";
 "alert_cancel" = "Annuler";
 "alert_reset" = "Réinitialiser";
 "alert_clear" = "Effacer";
+
+// Menu
+"menu_open" = "Ouvrir AudioCascade";
+"menu_quit" = "Quitter";

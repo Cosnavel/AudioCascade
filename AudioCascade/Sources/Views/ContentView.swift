@@ -140,6 +140,8 @@ struct ContentView: View {
 }
 
 struct HeaderView: View {
+    @Environment(\.dismiss) private var dismiss
+
     var body: some View {
         HStack {
             Image(systemName: "hifispeaker.2.fill")
@@ -157,7 +159,10 @@ struct HeaderView: View {
             Spacer()
 
             Button(action: {
-                NSApp.terminate(nil)
+                // Close the popover instead of terminating the app
+                if let appDelegate = NSApp.delegate as? AppDelegate {
+                    appDelegate.closePopover(sender: nil)
+                }
             }) {
                 Image(systemName: "xmark.circle.fill")
                     .foregroundColor(.secondary)

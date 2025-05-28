@@ -151,14 +151,29 @@ struct Localization {
             "fr": "À propos"
         ],
         "settings_version": [
-            "en": "Version %@",
-            "de": "Version %@",
-            "fr": "Version %@"
+            "en": "Version",
+            "de": "Version",
+            "fr": "Version"
         ],
         "settings_developer": [
             "en": "Developed by %@",
             "de": "Entwickelt von %@",
             "fr": "Développé par %@"
+        ],
+        "settings_github": [
+            "en": "GitHub Repository",
+            "de": "GitHub Repository",
+            "fr": "Dépôt GitHub"
+        ],
+        "settings_report_issue": [
+            "en": "Report an Issue",
+            "de": "Problem melden",
+            "fr": "Signaler un Problème"
+        ],
+        "settings_audio": [
+            "en": "Audio Management",
+            "de": "Audio-Verwaltung",
+            "fr": "Gestion Audio"
         ],
         "settings_quit": [
             "en": "Quit AudioCascade",
@@ -269,6 +284,52 @@ struct Localization {
             "en": "Done",
             "de": "Fertig",
             "fr": "Terminé"
+        ],
+
+        // Menu
+        "menu_open": [
+            "en": "Open AudioCascade",
+            "de": "AudioCascade öffnen",
+            "fr": "Ouvrir AudioCascade"
+        ],
+        "menu_quit": [
+            "en": "Quit",
+            "de": "Beenden",
+            "fr": "Quitter"
+        ],
+
+        // Empty State
+        "empty_input_title": [
+            "en": "No Input Devices",
+            "de": "Keine Eingabegeräte",
+            "fr": "Aucun Périphérique d'Entrée"
+        ],
+        "empty_output_title": [
+            "en": "No Output Devices",
+            "de": "Keine Ausgabegeräte",
+            "fr": "Aucun Périphérique de Sortie"
+        ],
+        "empty_subtitle": [
+            "en": "Connect an audio device to see it here",
+            "de": "Verbinde ein Audiogerät, um es hier zu sehen",
+            "fr": "Connectez un périphérique audio pour le voir ici"
+        ],
+
+        // Shortcut Recorder
+        "shortcut_recording": [
+            "en": "Recording...",
+            "de": "Aufnahme...",
+            "fr": "Enregistrement..."
+        ],
+        "shortcut_none": [
+            "en": "None Set",
+            "de": "Nicht gesetzt",
+            "fr": "Non défini"
+        ],
+        "shortcut_clear": [
+            "en": "Clear",
+            "de": "Löschen",
+            "fr": "Effacer"
         ]
     ]
 }

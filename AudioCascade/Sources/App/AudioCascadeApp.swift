@@ -21,6 +21,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var popover: NSPopover!
     var audioManager: AudioDeviceManager!
     var eventMonitor: EventMonitor?
+    var menu: NSMenu!
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         // Initialize audio manager once
@@ -34,9 +35,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         if let button = statusItem.button {
             button.image = NSImage(systemSymbolName: "hifispeaker.2", accessibilityDescription: "AudioCascade")
-            button.action = #selector(togglePopover)
+            button.action = #selector(statusItemClicked)
             button.sendAction(on: [.leftMouseUp, .rightMouseUp])
         }
+
+        // Create the context menu
+        menu = NSMenu()
+        menu.addItem(NSMenuItem(title: "menu_open".localized, action: #selector(showPopover), keyEquivalent: ""))
+        menu.addItem(NSMenuItem.separator())
+        menu.addItem(NSMenuItem(title: "menu_quit".localized, action: #selector(quitApp), keyEquivalent: "q"))
 
         // Create the popover
         popover = NSPopover()
@@ -78,6 +85,20 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
     }
 
+    @objc func statusItemClicked(_ sender: AnyObject?) {
+        guard let event = NSApp.currentEvent else { return }
+
+        if event.type == .rightMouseUp {
+            // Show context menu on right click
+            statusItem.menu = menu
+            statusItem.button?.performClick(nil)
+            statusItem.menu = nil
+        } else {
+            // Toggle popover on left click
+            togglePopover(sender)
+        }
+    }
+
     @objc func togglePopover(_ sender: AnyObject?) {
         if popover.isShown {
             closePopover(sender: sender)
@@ -86,7 +107,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
     }
 
-    func showPopover(sender: AnyObject?) {
+    @objc func showPopover(sender: AnyObject?) {
         if let button = statusItem.button {
             popover.show(relativeTo: button.bounds, of: button, preferredEdge: NSRectEdge.minY)
             eventMonitor?.start()
@@ -99,6 +120,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func closePopover(sender: AnyObject?) {
         popover.performClose(sender)
         eventMonitor?.stop()
+    }
+
+    @objc func quitApp() {
+        NSApp.terminate(nil)
     }
 
     func updateDockVisibility() {

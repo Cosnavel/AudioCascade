@@ -55,3 +55,7 @@
 "alert_cancel" = "Abbrechen";
 "alert_reset" = "Zurücksetzen";
 "alert_clear" = "Entfernen";
+
+// Menu
+"menu_open" = "AudioCascade öffnen";
+"menu_quit" = "Beenden";
