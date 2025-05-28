@@ -193,6 +193,43 @@ struct Localization {
             "fr": "%d appareils effacés"
         ],
 
+        // Alerts
+        "alert_reset_title": [
+            "en": "Reset Priorities?",
+            "de": "Prioritäten zurücksetzen?",
+            "fr": "Réinitialiser les priorités?"
+        ],
+        "alert_reset_message": [
+            "en": "This will reset all device priorities to their default order.",
+            "de": "Dies setzt alle Geräteprioritäten auf ihre Standardreihenfolge zurück.",
+            "fr": "Cela réinitialisera toutes les priorités des appareils à leur ordre par défaut."
+        ],
+        "alert_clear_title": [
+            "en": "Clear Disconnected Devices?",
+            "de": "Getrennte Geräte entfernen?",
+            "fr": "Effacer les appareils déconnectés?"
+        ],
+        "alert_clear_message": [
+            "en": "This will remove all disconnected devices from your saved list.",
+            "de": "Dies entfernt alle getrennten Geräte aus deiner gespeicherten Liste.",
+            "fr": "Cela supprimera tous les appareils déconnectés de votre liste enregistrée."
+        ],
+        "alert_cancel": [
+            "en": "Cancel",
+            "de": "Abbrechen",
+            "fr": "Annuler"
+        ],
+        "alert_reset": [
+            "en": "Reset",
+            "de": "Zurücksetzen",
+            "fr": "Réinitialiser"
+        ],
+        "alert_clear": [
+            "en": "Clear",
+            "de": "Entfernen",
+            "fr": "Effacer"
+        ],
+
         // Shortcut
         "shortcut_title": [
             "en": "Keyboard Shortcut",

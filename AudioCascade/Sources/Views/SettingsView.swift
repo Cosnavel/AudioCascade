@@ -9,6 +9,8 @@ struct SettingsView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var showResetConfirmation = false
     @State private var showClearConfirmation = false
+    @State private var showingResetAlert = false
+    @State private var showingClearAlert = false
 
     var body: some View {
         VStack(spacing: 0) {
@@ -42,6 +44,7 @@ struct SettingsView: View {
                         Text("settings_general".localized)
                             .font(.headline)
                             .foregroundColor(.secondary)
+                            .frame(maxWidth: .infinity, alignment: .leading)
 
                         VStack(spacing: 8) {
                             Toggle("settings_start_login".localized, isOn: Binding(
@@ -78,6 +81,7 @@ struct SettingsView: View {
                         Text("settings_audio".localized)
                             .font(.headline)
                             .foregroundColor(.secondary)
+                            .frame(maxWidth: .infinity, alignment: .leading)
 
                         VStack(spacing: 16) {
                             VStack(alignment: .leading, spacing: 4) {
@@ -94,11 +98,7 @@ struct SettingsView: View {
                             }
 
                             Button(action: {
-                                audioManager.resetAllPriorities()
-                                showResetConfirmation = true
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                                    showResetConfirmation = false
-                                }
+                                showingResetAlert = true
                             }) {
                                 Label("settings_reset_priorities".localized, systemImage: "arrow.counterclockwise")
                                     .frame(maxWidth: .infinity)
@@ -107,11 +107,7 @@ struct SettingsView: View {
                             .buttonStyle(.bordered)
 
                             Button(action: {
-                                audioManager.clearDisconnectedDevices()
-                                showClearConfirmation = true
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                                    showClearConfirmation = false
-                                }
+                                showingClearAlert = true
                             }) {
                                 Label("settings_clear_disconnected".localized, systemImage: "trash")
                                     .frame(maxWidth: .infinity)
@@ -129,6 +125,7 @@ struct SettingsView: View {
                         Text("settings_about".localized)
                             .font(.headline)
                             .foregroundColor(.secondary)
+                            .frame(maxWidth: .infinity, alignment: .leading)
 
                         VStack(alignment: .leading, spacing: 12) {
                             HStack {
@@ -186,5 +183,29 @@ struct SettingsView: View {
         }
         .animation(.easeInOut(duration: 0.2), value: showResetConfirmation)
         .animation(.easeInOut(duration: 0.2), value: showClearConfirmation)
+        .alert("alert_reset_title".localized, isPresented: $showingResetAlert) {
+            Button("alert_cancel".localized, role: .cancel) { }
+            Button("alert_reset".localized, role: .destructive) {
+                audioManager.resetAllPriorities()
+                showResetConfirmation = true
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                    showResetConfirmation = false
+                }
+            }
+        } message: {
+            Text("alert_reset_message".localized)
+        }
+        .alert("alert_clear_title".localized, isPresented: $showingClearAlert) {
+            Button("alert_cancel".localized, role: .cancel) { }
+            Button("alert_clear".localized, role: .destructive) {
+                audioManager.clearDisconnectedDevices()
+                showClearConfirmation = true
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                    showClearConfirmation = false
+                }
+            }
+        } message: {
+            Text("alert_clear_message".localized)
+        }
     }
 }
