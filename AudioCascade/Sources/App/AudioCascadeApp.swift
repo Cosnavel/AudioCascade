@@ -52,8 +52,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         popover.animates = true
 
         // Set the content view
-        let contentView = ContentView()
-            .environmentObject(audioManager)
+        let contentView = ContentView(closeAction: { [weak self] in
+            self?.closePopover(sender: nil)
+        })
+        .environmentObject(audioManager)
 
         popover.contentViewController = NSHostingController(rootView: contentView)
 
@@ -117,8 +119,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
     }
 
-    func closePopover(sender: AnyObject?) {
-        popover.performClose(sender)
+    @objc func closePopover(sender: AnyObject?) {
+        popover.close()
         eventMonitor?.stop()
     }
 

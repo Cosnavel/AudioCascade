@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct ContentView: View {
+    let closeAction: () -> Void
     @EnvironmentObject var audioManager: AudioDeviceManager
     @State private var selectedTab: AudioDeviceType = .output
     @State private var searchText = ""
@@ -10,7 +11,7 @@ struct ContentView: View {
     var body: some View {
         VStack(spacing: 0) {
             // Header
-            HeaderView()
+            HeaderView(closeAction: closeAction)
 
             // Manual Mode Banner
             if audioManager.isManualModeActive {
@@ -140,7 +141,7 @@ struct ContentView: View {
 }
 
 struct HeaderView: View {
-    @Environment(\.dismiss) private var dismiss
+    let closeAction: () -> Void
 
     var body: some View {
         HStack {
@@ -160,9 +161,7 @@ struct HeaderView: View {
 
             Button(action: {
                 // Close the popover instead of terminating the app
-                if let appDelegate = NSApp.delegate as? AppDelegate {
-                    appDelegate.closePopover(sender: nil)
-                }
+                closeAction()
             }) {
                 Image(systemName: "xmark.circle.fill")
                     .foregroundColor(.secondary)
@@ -201,8 +200,8 @@ struct FooterView: View {
                 Image(systemName: "gear")
             }
             .buttonStyle(.plain)
-            .popover(isPresented: $showingSettings) {
-                SettingsView()
+            .popover(isPresented: $showingSettings, arrowEdge: .bottom) {
+                SettingsView(closeAction: { showingSettings = false })
                     .environmentObject(audioManager)
             }
         }

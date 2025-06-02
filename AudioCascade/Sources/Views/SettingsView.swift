@@ -2,11 +2,11 @@ import SwiftUI
 import ServiceManagement
 
 struct SettingsView: View {
+    let closeAction: () -> Void
     @EnvironmentObject var audioManager: AudioDeviceManager
     @AppStorage("startAtLogin") private var startAtLogin = false
     @AppStorage("showInDock") private var showInDock = false
     @AppStorage("checkInterval") private var checkInterval = 1.0
-    @Environment(\.dismiss) private var dismiss
     @State private var showResetConfirmation = false
     @State private var showClearConfirmation = false
     @State private var showingResetAlert = false
@@ -25,7 +25,7 @@ struct SettingsView: View {
 
                 Spacer()
 
-                Button(action: { dismiss() }) {
+                Button(action: closeAction) {
                     Image(systemName: "xmark.circle.fill")
                         .foregroundColor(.secondary)
                 }
